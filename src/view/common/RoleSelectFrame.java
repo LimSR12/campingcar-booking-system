@@ -11,7 +11,7 @@ import view.user.UserLoginFrame;
 public class RoleSelectFrame extends JFrame {
 
     public RoleSelectFrame() {
-        setTitle("Campin 로그인 선택");
+        setTitle("Camping 로그인 선택");
         setSize(350, 200);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null); // 화면 중앙
