@@ -1,0 +1,29 @@
+# === Java 컴파일 산출물 ===
+*.class
+*.jar
+*.war
+*.ear
+
+# === Eclipse 자동 생성 디렉토리 ===
+bin/             # 컴파일된 .class 파일 저장 폴더 (자동 생성됨)
+target/          # Maven/Gradle 빌드 결과물
+
+# === Eclipse 관련 설정 파일 (공유 X) ===
+.settings/       # 개인 환경에 종속
+.project         # 프로젝트 이름이나 정보 (협업 중이면 보존 가능)
+.classpath       # 클래스 경로 정보 (협업 시 공유 추천)
+
+# === 운영체제 및 툴 관련 파일 ===
+.DS_Store        # macOS
+Thumbs.db        # Windows
+*.log            # 로그 파일
+*.tmp            # 임시 파일
+*.bak            # 백업 파일
+
+# === Git 및 이클립스 내부 폴더 ===
+.metadata/       # Eclipse 워크스페이스 정보 (절대 올리지 말기)
+.idea/           # IntelliJ 설정 폴더
+*.iml            # IntelliJ 모듈 파일
+
+# === Git hooks나 환경 설정이 필요한 경우 추가 ===
+# .env
