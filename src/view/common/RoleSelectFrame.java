@@ -1,8 +1,11 @@
 package view.common;
 
 import javax.swing.*;
+
+import dao.LoginDao;
+
 import java.awt.*;
-import view.admin.AdminLoginFrame;
+import view.admin.MainFrame;
 import view.user.UserLoginFrame;
 
 public class RoleSelectFrame extends JFrame {
@@ -30,8 +33,8 @@ public class RoleSelectFrame extends JFrame {
         userBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         adminBtn.addActionListener(e -> {
-            dispose(); // 현재 창 닫기
-            new AdminLoginFrame(); // 관리자 로그인 창 열기
+            dispose();
+            handleAdminLogin();
         });
 
         userBtn.addActionListener(e -> {
@@ -47,5 +50,20 @@ public class RoleSelectFrame extends JFrame {
 
         add(panel);
         setVisible(true);
+    }
+    
+    private void handleAdminLogin() {
+        String inputId = "root";
+        String inputPw = "1234";
+
+        boolean isValid = LoginDao.verifyLogin(inputId, inputPw);
+
+        if (isValid) {
+            JOptionPane.showMessageDialog(this, "로그인 성공!");
+            dispose(); // 현재 로그인 창 닫기
+            new MainFrame();
+        } else {
+            JOptionPane.showMessageDialog(this, "아이디 또는 비밀번호가 틀렸습니다.");
+        }
     }
 }

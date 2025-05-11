@@ -2,6 +2,7 @@ package view.user;
 
 import javax.swing.*;
 import dao.LoginDao;
+import util.DialogUtil;
 
 public class UserLoginFrame extends JFrame {
     private JTextField userIdField;
@@ -60,7 +61,7 @@ public class UserLoginFrame extends JFrame {
         String inputPw = new String(passwordField.getPassword());
 
         if (inputId.isEmpty() || inputPw.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "아이디와 비밀번호를 모두 입력해주세요.");
+        	DialogUtil.showWarning(this, "올바르지 않은 입력입니다.");
             return;
         }
 
