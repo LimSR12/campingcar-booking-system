@@ -14,7 +14,6 @@ public class DBInitializer {
 		
         try {
             // DB 연결
-            Class.forName("com.mysql.cj.jdbc.Driver");
             conn = DriverManager.getConnection(
                 "jdbc:mysql://localhost:3306", "root", "1234"
             );
