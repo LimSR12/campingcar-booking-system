@@ -9,7 +9,7 @@ public class LoginDao {
         boolean result = false;
 
         try (
-        		Connection conn = DBConnection.connect();
+        		Connection conn = DBConnection.getConnection();
                 PreparedStatement pstmt = conn.prepareStatement(
                 		"SELECT * FROM customer WHERE username = ? AND password = ?"
                 		)
