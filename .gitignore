@@ -6,6 +6,8 @@
 
 # === Eclipse 자동 생성 디렉토리 ===
 bin/             # 컴파일된 .class 파일 저장 폴더 (자동 생성됨)
+bin/.gitignore
+
 target/          # Maven/Gradle 빌드 결과물
 
 # === Eclipse 관련 설정 파일 (공유 X) ===
