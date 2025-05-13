@@ -31,12 +31,14 @@ public class CampingCar {
     }
 
  // user/CampinCarPanel에서 캠핑카 조회
-    public CampingCar(String name, String plateNumber, int capacity, int rentalPrice, String registrationDate) {
+    public CampingCar(String name, String plateNumber, int capacity, int rentalPrice, String registrationDate, String image, String detailInfo) {
         this.name = name;
         this.plateNumber = plateNumber;
         this.capacity = capacity;
         this.rentalPrice = rentalPrice;
         this.registrationDate = registrationDate;
+        this.image = image;
+        this.detailInfo = detailInfo;
     }
 
     

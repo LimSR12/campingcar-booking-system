@@ -17,7 +17,7 @@ public class MainFrame extends JFrame {
         setSize(1024, 768);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLayout(new BorderLayout());
+        setLayout(new BorderLayout());	
 
         // 왼쪽 메뉴 패널
         JPanel menuPanel = new JPanel();
@@ -42,7 +42,7 @@ public class MainFrame extends JFrame {
 
         // 오른쪽 패널 (CardLayout)
         rightPanel.add(new CampingCarPanel(), "camping");
-        rightPanel.add(new ReservationPanel(), "reservation"); // 예시용 빈 패널
+        rightPanel.add(new ReservationPanel(), "reservation");
         add(rightPanel, BorderLayout.CENTER);
 
         // 버튼 이벤트
