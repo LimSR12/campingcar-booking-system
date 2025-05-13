@@ -7,6 +7,10 @@ public class MainFrame extends JFrame {
 
     private CardLayout cardLayout = new CardLayout();
     private JPanel rightPanel = new JPanel(cardLayout);
+    
+    public static void main(String[] args) {
+        new MainFrame();
+    }
 
     public MainFrame() {
         setTitle("캠핑카 예약 시스템");
@@ -21,22 +25,20 @@ public class MainFrame extends JFrame {
         menuPanel.setPreferredSize(new Dimension(150, getHeight())); // 폭 고정
 
         // 버튼 생성
-        JButton btnCamping = new JButton("캠핑카 조회");
-        JButton btnReservation = new JButton("예약 확인");
-
-        // 버튼 크기 고정
-        Dimension buttonSize = new Dimension(140, 40);
-        btnCamping.setMaximumSize(buttonSize);
-        btnReservation.setMaximumSize(buttonSize);
+        JButton btnCamping = createMenuButton("캠핑카 조회");
+        JButton btnReservation = createMenuButton("예약 확인");
+        JButton btnRepair = createMenuButton("정비 의뢰");
 
         // 여백 + 버튼 추가
         menuPanel.add(Box.createVerticalStrut(20));
         menuPanel.add(btnCamping);
         menuPanel.add(Box.createVerticalStrut(10));
         menuPanel.add(btnReservation);
+        menuPanel.add(Box.createVerticalStrut(10));
+        menuPanel.add(btnRepair);
         menuPanel.add(Box.createVerticalGlue());
 
-        add(menuPanel, BorderLayout.WEST); // 왼쪽에 배치
+        add(menuPanel, BorderLayout.WEST); // 패널을 왼쪽 배치
 
         // 오른쪽 패널 (CardLayout)
         rightPanel.add(new CampingCarPanel(), "camping");
@@ -50,7 +52,14 @@ public class MainFrame extends JFrame {
         setVisible(true);
     }
 
-    public static void main(String[] args) {
-        new MainFrame();
+    // 왼쪽 메뉴 패널에 사용하기 좋게 버튼 생성해서 반환하는 메서드
+    private JButton createMenuButton(String text) {
+        JButton button = new JButton(text);
+        // 버튼 중앙 정렬
+        button.setAlignmentX(Component.CENTER_ALIGNMENT);
+        // 버튼 크기 고정
+        button.setMaximumSize(new Dimension(140, 40));
+        return button;
     }
+
 }
