@@ -3,7 +3,7 @@ package view.user;
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
-import model.CampingCar;
+import entity.CampingCar;
 import dao.CampingCarDao;
 
 public class CampingCarPanel extends JPanel {
