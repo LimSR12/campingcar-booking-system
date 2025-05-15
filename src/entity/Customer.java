@@ -1,5 +1,7 @@
 package entity;
 
+import java.sql.Timestamp;
+
 public class Customer {
     private Long id;
     private String username;
@@ -9,7 +11,7 @@ public class Customer {
     private String address;
     private String phone;
     private String email;
-    private String prevReturnDate;  // DATETIME → java.sql.Timestamp 또는 String
+    private Timestamp prevReturnDate;  // DATETIME → java.sql.Timestamp 또는 String
     private String prevCarType;
 
     // 기본 생성자
@@ -18,7 +20,7 @@ public class Customer {
     // 전체 필드를 받는 생성자
     public Customer(Long id, String username, String password, String licenseNumber,
                     String name, String address, String phone, String email,
-                    String prevReturnDate, String prevCarType) {
+                    Timestamp prevReturnDate, String prevCarType) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -97,11 +99,11 @@ public class Customer {
         this.email = email;
     }
 
-    public String getPrevReturnDate() {
+    public Timestamp getPrevReturnDate() {
         return prevReturnDate;
     }
 
-    public void setPrevReturnDate(String prevReturnDate) {
+    public void setPrevReturnDate(Timestamp prevReturnDate) {
         this.prevReturnDate = prevReturnDate;
     }
 
