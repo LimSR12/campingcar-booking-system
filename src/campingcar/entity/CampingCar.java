@@ -1,4 +1,4 @@
-package model;
+package campingcar.entity;
 
 import java.sql.Timestamp;
 

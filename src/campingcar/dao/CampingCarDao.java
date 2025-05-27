@@ -1,10 +1,11 @@
-package dao;
+package campingcar.dao;
 
 import db.DBConnection;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import model.CampingCar;
+
+import campingcar.entity.CampingCar;
 
 public class CampingCarDao {
 

@@ -1,10 +1,12 @@
-package view.user;
+package campingcar.view;
 
 import javax.swing.*;
+
+import campingcar.dao.CampingCarDao;
+import campingcar.entity.CampingCar;
+
 import java.awt.*;
 import java.util.List;
-import model.CampingCar;
-import dao.CampingCarDao;
 
 public class CampingCarPanel extends JPanel {
 	private List<CampingCar> carList;

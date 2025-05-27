@@ -1,6 +1,9 @@
 package view.user;
 
 import javax.swing.*;
+
+import campingcar.view.CampingCarPanel;
+
 import java.awt.*;
 
 public class MainFrame extends JFrame {
