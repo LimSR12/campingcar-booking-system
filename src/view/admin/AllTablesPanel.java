@@ -41,7 +41,7 @@ public class AllTablesPanel extends JPanel {
 		
 		// UI 배치
 		add(tableCombo, BorderLayout.NORTH);
-		add(new JScrollPane(tableView), BorderLayout.CENTER);
+		add(new JScrollPane(tableView), BorderLayout.SOUTH);
 		
 		// 초기 선택
 		if (tableCombo.getItemCount() > 0) tableCombo.setSelectedIndex(0);
