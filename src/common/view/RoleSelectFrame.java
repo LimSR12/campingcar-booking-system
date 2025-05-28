@@ -4,6 +4,8 @@ import javax.swing.*;
 
 import admin.view.MainFrame;
 import common.dao.LoginDao;
+import global.entity.Customer;
+import global.session.Session;
 import user.view.UserLoginFrame;
 
 import java.awt.*;
@@ -56,7 +58,7 @@ public class RoleSelectFrame extends JFrame {
         String inputId = "root";
         String inputPw = "1234";
 
-        boolean isValid = LoginDao.verifyLogin(inputId, inputPw);
+        boolean isValid = LoginDao.adminLogin(inputId, inputPw);
 
         if (isValid) {
             JOptionPane.showMessageDialog(this, "로그인 성공!");
