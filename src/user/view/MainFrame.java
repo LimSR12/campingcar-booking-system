@@ -56,10 +56,27 @@ public class MainFrame extends JFrame {
     // 왼쪽 메뉴 패널에 사용하기 좋게 버튼 생성해서 반환하는 메서드
     private JButton createMenuButton(String text) {
         JButton button = new JButton(text);
-        // 버튼 중앙 정렬
-        button.setAlignmentX(Component.CENTER_ALIGNMENT);
-        // 버튼 크기 고정
-        button.setMaximumSize(new Dimension(140, 40));
+        
+        button.setAlignmentX(Component.CENTER_ALIGNMENT);// 버튼 중앙 정렬
+        button.setMaximumSize(new Dimension(140, 40));// 버튼 크기 고정
+        
+     // 색상 & 디자인
+        button.setBackground(new Color(70, 130, 180)); // 스틸 블루
+        button.setForeground(Color.WHITE);            // 글자색 흰색
+        button.setFont(new Font("맑은 고딕", Font.BOLD, 14));
+        button.setFocusPainted(false);                // 클릭 테두리 제거
+        button.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10)); // 안쪽 여백
+
+        // 마우스 오버 효과
+        button.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                button.setBackground(new Color(100, 149, 237)); // 연한 블루
+            }
+
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                button.setBackground(new Color(70, 130, 180)); // 원래 색상
+            }
+        });
         return button;
     }
 
