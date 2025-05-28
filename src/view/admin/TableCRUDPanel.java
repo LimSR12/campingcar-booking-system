@@ -5,8 +5,10 @@ import java.awt.CardLayout;
 import java.awt.GridLayout;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
+import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.stream.Stream;
@@ -15,6 +17,7 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
 import db.DBConnection;
+import db.ResultSetTableModel;
 
 public class TableCRUDPanel extends JPanel {
 	private String tableName;
@@ -49,6 +52,9 @@ public class TableCRUDPanel extends JPanel {
             if (pk!=null) showForm(loadRow(pk));
         });
         bDel .addActionListener(e -> deleteSelected());
+        
+        // 최초에는 조회 화면 보여주기
+        showView();
 	}
 	
     private Object deleteSelected() {
@@ -71,20 +77,45 @@ public class TableCRUDPanel extends JPanel {
 		return null;
 	}
 
-	private Object showView() {
-		// TODO Auto-generated method stub
-		return null;
+	private void showView() {
+        cards.show(cardPane, "VIEW");
+        refreshTable();
 	}
 
 	private JScrollPane createListPanel() {
-        DefaultTableModel model = new DefaultTableModel();
-        table = new JTable(model);
-        refreshTable(null);
+		// 빈 테이블 생성
+        table = new JTable();
         return new JScrollPane(table);
     }
     
-    private void refreshTable(Object object) {
-		// TODO Auto-generated method stub
+    private void refreshTable() {
+		if (tableName == null || tableName.startsWith("<")) return;
+		
+		String sql = "SELECT * FROM " + tableName;
+        try (Connection conn = DBConnection.getConnection();
+                Statement st    = conn.createStatement();
+                ResultSet rs    = st.executeQuery(sql)) {
+
+            // ResultSetTableModel은 이미 ResultSet → TableModel 변환해 주는 유틸
+            try {
+                table.setModel(new ResultSetTableModel(rs));
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(
+                    this,
+                    "테이블 로드 중 오류 발생:\n" + ex.getMessage(),
+                    "DB 오류",
+                    JOptionPane.ERROR_MESSAGE
+                );
+            }
+            
+        } catch (SQLException sqlEx) {
+            JOptionPane.showMessageDialog(
+                this,
+                "DB 연결/쿼리 오류:\n" + sqlEx.getMessage(),
+                "SQL 오류",
+                JOptionPane.ERROR_MESSAGE
+            );
+        }
 		
 	}
 
