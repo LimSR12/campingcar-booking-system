@@ -33,7 +33,7 @@ public class CampingCarPanel extends JPanel {
         table.getColumnModel().getColumn(2).setPreferredWidth(70);
         table.getColumnModel().getColumn(3).setPreferredWidth(70);
         table.getColumnModel().getColumn(4).setPreferredWidth(130);
-        table.getColumnModel().getColumn(5).setPreferredWidth(200);
+        table.getColumnModel().getColumn(5).setPreferredWidth(250);
 
         JScrollPane tableScroll = new JScrollPane(table);
         tableScroll.setPreferredSize(new Dimension(1024, 480)); // 상단
