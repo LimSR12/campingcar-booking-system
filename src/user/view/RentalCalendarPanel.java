@@ -77,7 +77,7 @@ public class RentalCalendarPanel extends JPanel {
             checkOutDate = null;
             resetAllToWhite();
             dateLabelMap.get(clicked).setBackground(new Color(119, 221, 119));
-        } else if (checkInDate != null && checkOutDate == null && clicked.isAfter(checkInDate)) {
+        } else if (checkInDate != null && checkOutDate == null && !clicked.isBefore(checkInDate)) {
             checkOutDate = clicked;
             highlightRange(checkInDate, checkOutDate);
         } else {
