@@ -21,7 +21,7 @@ import javax.swing.tree.DefaultTreeModel;
 
 import db.DBConnection;
 import db.DBInitializer;
-import util.DialogUtil;
+import global.util.DialogUtil;
 
 /*
  * 관리자 전용 메인 프레임
