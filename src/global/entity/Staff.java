@@ -1,4 +1,4 @@
-package entity;
+package global.entity;
 
 public class Staff {
     private long id;

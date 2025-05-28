@@ -2,7 +2,7 @@ package view.user;
 
 import javax.swing.*;
 import dao.LoginDao;
-import util.DialogUtil;
+import global.util.DialogUtil;
 
 public class UserLoginFrame extends JFrame {
     private JTextField userIdField;

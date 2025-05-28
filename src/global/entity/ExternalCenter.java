@@ -1,4 +1,4 @@
-package entity;
+package global.entity;
 
 public class ExternalCenter {
     private long id;

@@ -1,4 +1,4 @@
-package util;
+package global.util;
 
 import javax.swing.JOptionPane;
 import java.awt.Component;

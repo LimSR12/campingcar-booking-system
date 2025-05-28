@@ -2,7 +2,7 @@ package dao;
 
 import java.sql.*;
 import db.DBConnection;
-import util.DialogUtil;
+import global.util.DialogUtil;
 
 public class LoginDao {
     public static boolean verifyLogin(String userId, String password) {

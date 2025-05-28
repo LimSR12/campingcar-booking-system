@@ -1,4 +1,4 @@
-package entity;
+package global.entity;
 
 public class Company {
     private long id;
