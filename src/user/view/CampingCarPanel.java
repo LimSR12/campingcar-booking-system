@@ -103,6 +103,11 @@ public class CampingCarPanel extends JPanel {
 
             System.out.println("예약 차량: " + name + ", 번호: " + plate + ", 금액: " + price);
             System.out.println("기간: " + checkIn + " ~ " + checkOut);
+            
+            // 팝업 띄우기
+            JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
+            ReservationFormDialog dialog = new ReservationFormDialog(topFrame, name, plate, checkIn, checkOut);
+            dialog.setVisible(true);
         });
     }
 
