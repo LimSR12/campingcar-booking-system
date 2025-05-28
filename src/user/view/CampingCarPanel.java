@@ -89,26 +89,35 @@ public class CampingCarPanel extends JPanel {
                 return;
             }
 
-            String name = table.getValueAt(selectedRow, 0).toString();
-            String plate = table.getValueAt(selectedRow, 1).toString();
-            String price = table.getValueAt(selectedRow, 3).toString();
+            // 캠핑카 정보 추출
+            String campingCarName = table.getValueAt(selectedRow, 0).toString();
+            String plateNumber = table.getValueAt(selectedRow, 1).toString();
 
-            LocalDate checkIn = calendarPanel.getCheckInDate();
-            LocalDate checkOut = calendarPanel.getCheckOutDate();
+            // 날짜 선택 정보
+            LocalDate checkInDate = calendarPanel.getCheckInDate();
+            LocalDate checkOutDate = calendarPanel.getCheckOutDate();
 
-            if (checkIn == null || checkOut == null) {
+            if (checkInDate == null || checkOutDate == null) {
                 JOptionPane.showMessageDialog(null, "대여 시작일과 반납일을 선택하세요.");
                 return;
             }
 
-            System.out.println("예약 차량: " + name + ", 번호: " + plate + ", 금액: " + price);
-            System.out.println("기간: " + checkIn + " ~ " + checkOut);
-            
-            // 팝업 띄우기
+            // 
+            ImageIcon carImage = null;
+
+            // 다이얼로그 호출
             JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
-            ReservationFormDialog dialog = new ReservationFormDialog(topFrame, name, plate, checkIn, checkOut);
+            ReservationFormDialog dialog = new ReservationFormDialog(
+                topFrame,
+                campingCarName,
+                plateNumber,
+                checkInDate,
+                checkOutDate,
+                carImage
+            );
             dialog.setVisible(true);
         });
+
     }
 
     private String[][] loadCampingCarData() {

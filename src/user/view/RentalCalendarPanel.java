@@ -13,8 +13,8 @@ import java.util.Set;
 public class RentalCalendarPanel extends JPanel {
 
     private Map<LocalDate, JLabel> dateLabelMap = new HashMap<>();
-    private LocalDate checkInDate = null; 
-    private LocalDate checkOutDate = null;
+    private LocalDate startDate = null; 
+    private LocalDate endDate = null;
     private JPanel calendarGrid;
 
     public RentalCalendarPanel(Set<LocalDate> reservedDates, int year, int month) {
@@ -72,21 +72,28 @@ public class RentalCalendarPanel extends JPanel {
 
     // 선택한 날짜 핸들러 메서드
     private void handleDateClick(LocalDate clicked) {
-        if (checkInDate == null || (checkInDate != null && checkOutDate != null)) {
-            checkInDate = clicked;
-            checkOutDate = clicked;
+    	// 첫 클릭: 시작일 설정
+        if (startDate == null || (startDate != null && endDate != null)) {
+            startDate = clicked;
+            endDate = null;
             resetAllToWhite();
-            dateLabelMap.get(clicked).setBackground(new Color(119, 221, 119));
-        } else if (checkInDate != null && checkOutDate == null && !clicked.isBefore(checkInDate)) {
-            checkOutDate = clicked;
-            highlightRange(checkInDate, checkOutDate);
-        } else {
-            resetAllToWhite();
-            checkInDate = clicked;
-            checkOutDate = clicked;
-            dateLabelMap.get(clicked).setBackground(new Color(119, 221, 119));
+            highlightRange(startDate, startDate);
+        }
+        // 두 번째 클릭: 반납일 설정
+        else if (startDate != null && endDate == null) {
+            if (!clicked.isBefore(startDate)) {
+                endDate = clicked;
+                resetAllToWhite();
+                highlightRange(startDate, endDate);
+            } else {
+                // 이전 날짜 클릭 시 다시 시작
+                startDate = clicked;
+                resetAllToWhite();
+                highlightRange(startDate, startDate);
+            }
         }
     }
+
 
     private void highlightRange(LocalDate start, LocalDate end) {
         for (LocalDate d = start; !d.isAfter(end); d = d.plusDays(1)) {
@@ -105,13 +112,21 @@ public class RentalCalendarPanel extends JPanel {
             }
         }
     }
+    
+    // 예약 취소 시 기존 선택한 날짜 값 초기화하는 메서드 
+    public void resetSelection() {
+    	startDate = null;
+    	endDate = null;
+        resetAllToWhite();
+    }
+
 
     // 선택된 날짜 범위 반환용
     public LocalDate getCheckInDate() {
-        return checkInDate;
+        return startDate;
     }
 
     public LocalDate getCheckOutDate() {
-        return checkOutDate;
+        return endDate;
     }
 }
