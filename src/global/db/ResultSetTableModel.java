@@ -1,4 +1,4 @@
-package db;
+package global.db;
 
 import java.sql.ResultSet;
 import java.util.Vector;

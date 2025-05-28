@@ -1,9 +1,8 @@
-package view;
+package main;
 
 import javax.swing.*;
-import view.common.*;
 
-import view.common.LoginFrame;
+import common.view.RoleSelectFrame;
 
 public class Main {
     public static void main(String[] args) {

@@ -1,4 +1,4 @@
-package view.admin;
+package admin.view;
 
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
@@ -10,7 +10,7 @@ import java.awt.Font;
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 
-import db.DBInitializer;
+import global.db.DBInitializer;
 
 /*
  * 관리자 전용 메인 프레임

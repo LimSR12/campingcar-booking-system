@@ -1,7 +1,8 @@
-package view.user;
+package user.view;
 
 import javax.swing.*;
-import dao.LoginDao;
+
+import common.dao.LoginDao;
 import global.util.DialogUtil;
 
 public class UserLoginFrame extends JFrame {

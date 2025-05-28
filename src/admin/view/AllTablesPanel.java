@@ -1,4 +1,4 @@
-package view.admin;
+package admin.view;
 
 import java.awt.BorderLayout;
 import java.sql.Connection;
@@ -8,7 +8,7 @@ import java.sql.Statement;
 
 import javax.swing.*;
 
-import db.ResultSetTableModel;
+import global.db.ResultSetTableModel;
 
 /*
  * 전체 테이블 조회 전용 패널

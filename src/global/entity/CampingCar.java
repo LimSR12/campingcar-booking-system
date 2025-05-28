@@ -1,4 +1,4 @@
-package campingcar.entity;
+package global.entity;
 
 import java.sql.Timestamp;
 

@@ -1,8 +1,6 @@
-package view.user;
+package user.view;
 
 import javax.swing.*;
-
-import campingcar.view.CampingCarPanel;
 
 import java.awt.*;
 

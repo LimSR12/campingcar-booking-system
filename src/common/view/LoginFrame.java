@@ -1,7 +1,8 @@
-package view.common;
+package common.view;
 
 import javax.swing.*;
-import dao.LoginDao;
+
+import common.dao.LoginDao;
 
 public class LoginFrame extends JFrame {
     private JTextField userIdField;

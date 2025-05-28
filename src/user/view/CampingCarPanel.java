@@ -1,9 +1,9 @@
-package campingcar.view;
+package user.view;
 
 import javax.swing.*;
 
-import campingcar.dao.CampingCarDao;
-import campingcar.entity.CampingCar;
+import global.entity.CampingCar;
+import user.dao.CampingCarDao;
 
 import java.awt.*;
 import java.util.List;
