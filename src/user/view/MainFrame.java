@@ -43,7 +43,7 @@ public class MainFrame extends JFrame {
 
         // 오른쪽 패널 (CardLayout)
         rightPanel.add(new CampingCarPanel(), "camping");
-        rightPanel.add(new ReservationPanel(), "reservation");
+        rightPanel.add(new MyReservationPanel(), "reservation");
         add(rightPanel, BorderLayout.CENTER);
 
         // 버튼 이벤트
