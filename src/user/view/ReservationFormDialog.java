@@ -83,7 +83,7 @@ public class ReservationFormDialog extends JDialog {
         btnCancel.addActionListener(e -> dispose());
 
         btnSubmit.addActionListener(e -> {
-            long rentalDays = ChronoUnit.DAYS.between(startDate, endDate);
+            long rentalDays = ChronoUnit.DAYS.between(startDate, endDate) + 1;
             Rental rental = new Rental();
             rental.setCarId(carId);
             rental.setCustomerId(Session.getCustomerId());
@@ -92,7 +92,7 @@ public class ReservationFormDialog extends JDialog {
             rental.setStartDate(startDate.atStartOfDay());
             rental.setReturnDate(endDate.atStartOfDay());
             rental.setRentalDays((int) rentalDays);
-            rental.setRentalFee(pricePerDay);
+            rental.setRentalFee(pricePerDay * rentalDays);
             rental.setFeeDueDate(endDate.plusDays(7).atStartOfDay());
             rental.setExtraDetails(null);
             rental.setExtraFee(null);
