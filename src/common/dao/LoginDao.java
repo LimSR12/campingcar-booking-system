@@ -1,7 +1,8 @@
-package dao;
+package common.dao;
 
 import java.sql.*;
-import db.DBConnection;
+
+import global.db.DBConnection;
 import global.util.DialogUtil;
 
 public class LoginDao {

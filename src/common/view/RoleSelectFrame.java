@@ -1,12 +1,12 @@
-package view.common;
+package common.view;
 
 import javax.swing.*;
 
-import dao.LoginDao;
+import admin.view.MainFrame;
+import common.dao.LoginDao;
+import user.view.UserLoginFrame;
 
 import java.awt.*;
-import view.admin.MainFrame;
-import view.user.UserLoginFrame;
 
 public class RoleSelectFrame extends JFrame {
 

@@ -1,4 +1,4 @@
-package view.admin;
+package admin.view;
 
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
@@ -19,8 +19,8 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 
-import db.DBConnection;
-import db.DBInitializer;
+import global.db.DBConnection;
+import global.db.DBInitializer;
 import global.util.DialogUtil;
 
 /*

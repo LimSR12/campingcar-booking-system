@@ -1,4 +1,4 @@
-package db;
+package global.db;
 
 import java.io.BufferedReader;
 import java.io.Reader;

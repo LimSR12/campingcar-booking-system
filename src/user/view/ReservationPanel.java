@@ -1,4 +1,4 @@
-package view.user;
+package user.view;
 
 import javax.swing.*;
 import java.awt.*;

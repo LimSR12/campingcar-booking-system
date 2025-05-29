@@ -1,4 +1,4 @@
-package view.admin;
+package admin.view;
 
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
@@ -18,8 +18,8 @@ import java.util.stream.Stream;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
-import db.DBConnection;
-import db.ResultSetTableModel;
+import global.db.DBConnection;
+import global.db.ResultSetTableModel;
 
 public class TableCRUDPanel extends JPanel {
 	private String tableName;
