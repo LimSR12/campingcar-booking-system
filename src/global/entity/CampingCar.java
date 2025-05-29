@@ -30,9 +30,10 @@ public class CampingCar {
         this.registrationDate = registrationDate;
     }
 
- // user/CampinCarPanel에서 캠핑카 조회
-    public CampingCar(String name, String plateNumber, int capacity, int rentalPrice, String registrationDate, String image, String detailInfo) {
-        this.name = name;
+ // user/CampinCarPanel에서 캠핑카 조회 setter
+    public CampingCar(Long id, String name, String plateNumber, int capacity, int rentalPrice, String registrationDate, String image, String detailInfo) {
+        this.id = id;
+    	this.name = name;
         this.plateNumber = plateNumber;
         this.capacity = capacity;
         this.rentalPrice = rentalPrice;
