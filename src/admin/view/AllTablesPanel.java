@@ -4,11 +4,13 @@ import java.awt.BorderLayout;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.Statement;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 
-import global.db.ResultSetTableModel;
+import global.db.DBConnection;
 
 /*
  * 전체 테이블 조회 전용 패널
@@ -53,13 +55,27 @@ public class AllTablesPanel extends JPanel {
 		if (tbl == null || tbl.startsWith("<")) return;
 		
 		try {
-			Connection conn = DriverManager.getConnection(
-	                "jdbc:mysql://localhost:3306/camping", "root", "1234"
-	            );
+			Connection conn = DBConnection.getConnection();
 			Statement st = conn.createStatement();
 			ResultSet rs = st.executeQuery("SELECT * FROM " + tbl);
 			
-			tableView.setModel(new ResultSetTableModel(rs));
+            ResultSetMetaData md = rs.getMetaData();
+            int columnCount = md.getColumnCount();
+            String[] headers = new String[columnCount];
+            for (int i = 1; i <= columnCount; i++) {
+                headers[i - 1] = md.getColumnLabel(i);
+            }
+            
+            DefaultTableModel model = new DefaultTableModel(headers, 0);
+            while (rs.next()) {
+                Object[] row = new Object[columnCount];
+                for (int i = 1; i <= columnCount; i++) {
+                    row[i - 1] = rs.getObject(i);
+                }
+                model.addRow(row);
+            }
+			
+			tableView.setModel(model);
 		} catch (Exception ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage());
         }

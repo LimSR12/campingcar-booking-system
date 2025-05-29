@@ -23,6 +23,8 @@ import global.db.DBConnection;
 import global.db.DBInitializer;
 import global.util.DialogUtil;
 
+import admin.view.*;
+
 /*
  * 관리자 전용 메인 프레임
  * DB 초기화 버튼
@@ -94,11 +96,13 @@ public class MainFrame extends JFrame {
             
             // 트리에 실제 테이블 노드 추가
             DefaultMutableTreeNode newRoot = new DefaultMutableTreeNode("테이블");
-            for (String tbl : DBInitializer.getTableNames()) {
-            	newRoot.add(new DefaultMutableTreeNode(tbl));
-                // 오른쪽에 TableCRUDPanel(tbl) 카드 추가
-                content.add(new TableCRUDPanel(tbl), tbl);
-            }
+
+            // ALL 노드
+            newRoot.add(new DefaultMutableTreeNode("ALL"));
+
+            // camping_car
+            newRoot.add(new DefaultMutableTreeNode("camping_car"));
+            content.add(new CampingCarPanel(), "camping_car");
             
             root = newRoot;
             tree.setModel(new DefaultTreeModel(root));
@@ -122,7 +126,7 @@ public class MainFrame extends JFrame {
             // 트리가 아닌 메뉴바에서 “DB 초기화” 클릭 시
             onInitialize();
         } else {
-            // 테이블 명(key) 클릭 시 해당 TableCRUDPanel 띄우기
+            // 테이블 명(key) 클릭 시 해당 테이블 띄우기
             card.show(content, key);
         }
     }
