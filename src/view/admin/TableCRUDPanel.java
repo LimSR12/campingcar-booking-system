@@ -6,11 +6,13 @@ import java.awt.GridLayout;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import javax.swing.*;
@@ -73,7 +75,14 @@ public class TableCRUDPanel extends JPanel {
 	}
 
 	private Object showForm(Object object) {
-		// TODO Auto-generated method stub
+		// 모든 입력 칸 비우기
+		inputs.values().forEach(tf -> tf.setText(""));
+		
+		// 수정 기능: object 값으로 inputs 채워주기
+		
+		// Form 카드로 전환
+		cards.show(cardPane, "FORM");
+		
 		return null;
 	}
 
@@ -119,6 +128,7 @@ public class TableCRUDPanel extends JPanel {
 		
 	}
 
+    // 입력 패널 생성
 	private JPanel createFormPanel() throws SQLException {
         JPanel p = new JPanel(new GridLayout(0,2,5,5));
         try (Connection c = DBConnection.getConnection()) {
@@ -137,13 +147,61 @@ public class TableCRUDPanel extends JPanel {
         JButton cancel = new JButton("취소");
         save.addActionListener(e -> saveForm());
         cancel.addActionListener(e -> cards.show(cardPane,"VIEW"));
-        btns.add(save); btns.add(cancel);
+        btns.add(save);
+        btns.add(cancel);
         p.add(btns);
         return p;
     }
 
 	private Object saveForm() {
-		// TODO Auto-generated method stub
+		if (tableName == null) return null;
+		
+		try (Connection conn = DBConnection.getConnection()) {
+			// ["id", "name", "email"]
+			String cols = String.join(", ", inputs.keySet());
+			
+			// ["?", "?", "?"]
+			String holes = inputs.keySet().stream()
+								.map(c -> "?")
+								.collect(Collectors.joining(", "));
+			
+			// "INSERT INTO user (id, name, email) VALUES (?, ?, ?)"
+			String sql = "INSERT INTO " + tableName + " (" + cols + ") VALUES (" + holes + ")";
+			
+			PreparedStatement ps = conn.prepareStatement(sql);
+			
+			// INSERT INTO user (id, name, email) VALUES ('123', 'Alice', 'alice@example.com');
+			int idx = 1;
+			for (JTextField tf : inputs.values()) {
+				try {
+					ps.setString(idx++, tf.getText());
+				} catch (Exception ex) {
+	                JOptionPane.showMessageDialog(
+	                        this,
+	                        "텍스트 로드 중 오류 발생:\n" + ex.getMessage(),
+	                        "쿼리문 작성 중 오류",
+	                        JOptionPane.ERROR_MESSAGE
+	                );
+				}
+			}
+			
+            // 실행 및 결과 알림
+            int inserted = ps.executeUpdate();
+            JOptionPane.showMessageDialog(
+                this,
+                inserted + " 행이 추가되었습니다.",
+                "입력 완료",
+                JOptionPane.INFORMATION_MESSAGE
+            );
+		} catch (SQLException e) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "저장 중 오류 발생:\n" + e.getMessage(),
+                    "DB 오류",
+                    JOptionPane.ERROR_MESSAGE
+          );
+		}
+		showView();
 		return null;
 	}
     
