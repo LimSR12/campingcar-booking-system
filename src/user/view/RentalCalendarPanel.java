@@ -13,11 +13,14 @@ import java.util.Set;
 public class RentalCalendarPanel extends JPanel {
 
     private Map<LocalDate, JLabel> dateLabelMap = new HashMap<>();
+    private Set<LocalDate> reservedDates = new HashSet<>();
     private LocalDate startDate = null; 
     private LocalDate endDate = null;
     private JPanel calendarGrid;
 
     public RentalCalendarPanel(Set<LocalDate> reservedDates, int year, int month) {
+    	this.reservedDates = reservedDates;
+    	
         setLayout(new BorderLayout());
 
         JLabel title = new JLabel(year + "년 " + month + "월", SwingConstants.CENTER);
@@ -82,6 +85,12 @@ public class RentalCalendarPanel extends JPanel {
         // 두 번째 클릭: 반납일 설정
         else if (startDate != null && endDate == null) {
             if (!clicked.isBefore(startDate)) {
+            	if (hasReservedDateBetween(startDate, clicked)) {
+                    JOptionPane.showMessageDialog(this, "해당 기간에는 이미 예약된 날짜가 포함되어 있습니다.");
+                    startDate = null;
+                    endDate = null;
+                    return;
+                }
                 endDate = clicked;
                 resetAllToWhite();
                 highlightRange(startDate, endDate);
@@ -93,7 +102,15 @@ public class RentalCalendarPanel extends JPanel {
             }
         }
     }
-
+    
+    private boolean hasReservedDateBetween(LocalDate start, LocalDate end) {
+        for (LocalDate date = start; !date.isAfter(end); date = date.plusDays(1)) {
+            if (reservedDates.contains(date)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     private void highlightRange(LocalDate start, LocalDate end) {
         for (LocalDate d = start; !d.isAfter(end); d = d.plusDays(1)) {

@@ -97,6 +97,20 @@ public class ReservationFormDialog extends JDialog {
             rental.setExtraDetails(null);
             rental.setExtraFee(null);
 
+          //System.out.println("=== 예약 정보 확인 ===");
+          //System.out.println("carId: " + rental.getCarId());
+          //System.out.println("customerId: " + rental.getCustomerId());
+          //System.out.println("licenseNumber: " + rental.getLicenseNumber());
+          //System.out.println("companyId: " + rental.getCompanyId());
+          //System.out.println("startDate: " + rental.getStartDate());
+          //System.out.println("returnDate: " + rental.getReturnDate());
+          //System.out.println("rentalDays: " + rental.getRentalDays());
+          //System.out.println("rentalFee: " + rental.getRentalFee());
+          //System.out.println("feeDueDate: " + rental.getFeeDueDate());
+          //System.out.println("extraDetails: " + rental.getExtraDetails());
+          //System.out.println("extraFee: " + rental.getExtraFee());
+          //System.out.println("======================");
+            
             boolean reserved = rentalDao.insertRental(rental);
             if (reserved) {
                 JOptionPane.showMessageDialog(this, "예약이 완료되었습니다.");
@@ -119,16 +133,3 @@ public class ReservationFormDialog extends JDialog {
 }
 
 
-//System.out.println("=== 예약 정보 확인 ===");
-//System.out.println("carId: " + rental.getCarId());
-//System.out.println("customerId: " + rental.getCustomerId());
-//System.out.println("licenseNumber: " + rental.getLicenseNumber());
-//System.out.println("companyId: " + rental.getCompanyId());
-//System.out.println("startDate: " + rental.getStartDate());
-//System.out.println("returnDate: " + rental.getReturnDate());
-//System.out.println("rentalDays: " + rental.getRentalDays());
-//System.out.println("rentalFee: " + rental.getRentalFee());
-//System.out.println("feeDueDate: " + rental.getFeeDueDate());
-//System.out.println("extraDetails: " + rental.getExtraDetails());
-//System.out.println("extraFee: " + rental.getExtraFee());
-//System.out.println("======================");
