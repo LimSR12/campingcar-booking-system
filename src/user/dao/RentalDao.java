@@ -119,9 +119,9 @@ public class RentalDao {
     }
     
     public void deleteByRentalId(Long id) {
-        String sql = "DELETE FROM rental WHERE rental_id = ?";
+        String sql = "DELETE FROM rental WHERE id = ?";
 
-        try (Connection conn = DBUtil.getConnection();
+        try (Connection conn = DBConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setLong(1, id);
