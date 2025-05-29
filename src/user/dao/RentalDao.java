@@ -6,7 +6,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import global.db.DBConnection;
@@ -78,5 +80,41 @@ public class RentalDao {
             e.printStackTrace();
             return false;
         }
+    }
+    
+    // MyReservationPanel 사용자 id 로 대여 정보 받아옴
+    public List<Rental> getReservationsByCustomerId(Long customerId) {
+        List<Rental> rentals = new ArrayList<>();
+        String sql = "SELECT * FROM rental WHERE customer_id = ? ORDER BY start_date DESC";
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setLong(1, customerId);
+            ResultSet rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                Rental rental = new Rental();
+                rental.setId(rs.getLong("id"));
+                rental.setCarId(rs.getLong("car_id"));
+                rental.setCustomerId(rs.getLong("customer_id"));
+                rental.setLicenseNumber(rs.getString("license_number"));
+                rental.setCompanyId(rs.getLong("company_id"));
+                rental.setStartDate(rs.getTimestamp("start_date").toLocalDateTime());
+                rental.setReturnDate(rs.getTimestamp("return_date").toLocalDateTime());
+                rental.setRentalDays(rs.getInt("rental_days"));
+                rental.setRentalFee(rs.getDouble("rental_fee"));
+                rental.setFeeDueDate(rs.getTimestamp("fee_due_date").toLocalDateTime());
+                rental.setExtraDetails(rs.getString("extra_details"));
+                rental.setExtraFee(rs.getObject("extra_fee") != null ? rs.getDouble("extra_fee") : null);
+
+                rentals.add(rental);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return rentals;
     }
 }
