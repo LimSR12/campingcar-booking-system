@@ -31,8 +31,14 @@ public class MyReservationPanel extends JPanel {
 
         // 데이터 불러오기
         loadReservationData();
+        
+        // 삭제 버튼 추가
+        JButton deleteButton = new JButton("선택 삭제");
+        deleteButton.addActionListener(e -> deleteSelectedReservation());
+        add(deleteButton, BorderLayout.SOUTH);
     }
 
+    // 예약정보 받아오는 메서드
     private void loadReservationData() {
         Long customerId = Session.getCustomerId();
         RentalDao rentalDao = new RentalDao();
@@ -53,4 +59,26 @@ public class MyReservationPanel extends JPanel {
             tableModel.addRow(row);
         }
     }
+    
+    // 선택한 예약정보 삭제하는 메서드
+    private void deleteSelectedReservation() {
+        int selectedRow = reservationTable.getSelectedRow();
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(this, "삭제할 예약을 선택하세요.");
+            return;
+        }
+
+        int confirm = JOptionPane.showConfirmDialog(this, "정말로 삭제하시겠습니까?", "삭제 확인", JOptionPane.YES_NO_OPTION);
+        if (confirm != JOptionPane.YES_OPTION) {
+            return;
+        }
+
+        Long rentalId = (Long) tableModel.getValueAt(selectedRow, 0);
+        RentalDao rentalDao = new RentalDao();
+        rentalDao.deleteByRentalId(rentalId);
+
+        loadReservationData();  // 삭제 후 테이블 새로고침
+        JOptionPane.showMessageDialog(this, "삭제가 완료되었습니다.");
+    }
+
 }
