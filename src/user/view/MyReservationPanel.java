@@ -39,7 +39,7 @@ public class MyReservationPanel extends JPanel {
     }
 
     // 예약정보 받아오는 메서드
-    private void loadReservationData() {
+    public void loadReservationData() {
         Long customerId = Session.getCustomerId();
         RentalDao rentalDao = new RentalDao();
         List<Rental> rentals = rentalDao.getReservationsByCustomerId(customerId);

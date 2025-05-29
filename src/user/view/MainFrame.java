@@ -8,6 +8,7 @@ public class MainFrame extends JFrame {
 
     private CardLayout cardLayout = new CardLayout();
     private JPanel rightPanel = new JPanel(cardLayout);
+    private MyReservationPanel myReservationPanel = new MyReservationPanel();
     
     public static void main(String[] args) {
         new MainFrame();
@@ -43,12 +44,15 @@ public class MainFrame extends JFrame {
 
         // 오른쪽 패널 (CardLayout)
         rightPanel.add(new CampingCarPanel(), "camping");
-        rightPanel.add(new MyReservationPanel(), "reservation");
+        rightPanel.add(myReservationPanel, "reservation");
         add(rightPanel, BorderLayout.CENTER);
 
         // 버튼 이벤트
         btnCamping.addActionListener(e -> cardLayout.show(rightPanel, "camping"));
-        btnReservation.addActionListener(e -> cardLayout.show(rightPanel, "reservation"));
+        btnReservation.addActionListener(e -> {
+        	myReservationPanel.loadReservationData();
+        	cardLayout.show(rightPanel, "reservation");
+        });
 
         setVisible(true);
     }
