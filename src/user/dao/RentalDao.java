@@ -117,4 +117,25 @@ public class RentalDao {
 
         return rentals;
     }
+    
+    public void deleteByRentalId(Long id) {
+        String sql = "DELETE FROM rental WHERE rental_id = ?";
+
+        try (Connection conn = DBUtil.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setLong(1, id);
+            int rowsAffected = pstmt.executeUpdate();
+
+            if (rowsAffected > 0) {
+                System.out.println("삭제 성공: " + rowsAffected + "건");
+            } else {
+                System.out.println("삭제할 예약이 없습니다.");
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
