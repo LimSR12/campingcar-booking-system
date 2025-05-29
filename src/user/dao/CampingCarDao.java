@@ -13,7 +13,7 @@ public class CampingCarDao {
         List<CampingCar> list = new ArrayList<>();
 
         //String sql = "SELECT name, plate_number, capacity, rental_price, DATE_FORMAT(registration_date, '%Y-%m-%d %H:%i:%s') as registration_date FROM camping_car";
-        String sql = "SELECT name, plate_number, capacity, rental_price, "
+        String sql = "SELECT id, name, plate_number, capacity, rental_price, "
         		+ "DATE_FORMAT(registration_date, '%Y-%m-%d %H:%i:%s') as registration_date, "
         		+ "image, detail_info "
         		+ "FROM camping_car;";
@@ -24,6 +24,7 @@ public class CampingCarDao {
 
             while (rs.next()) {
             	CampingCar car = new CampingCar(
+            			rs.getLong("id"),
             		    rs.getString("name"),
             		    rs.getString("plate_number"),
             		    rs.getInt("capacity"),

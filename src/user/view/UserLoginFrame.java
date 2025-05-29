@@ -3,6 +3,8 @@ package user.view;
 import javax.swing.*;
 
 import common.dao.LoginDao;
+import global.entity.Customer;
+import global.session.Session;
 import global.util.DialogUtil;
 
 public class UserLoginFrame extends JFrame {
@@ -62,20 +64,23 @@ public class UserLoginFrame extends JFrame {
         String inputPw = new String(passwordField.getPassword());
 
         if (inputId.isEmpty() || inputPw.isEmpty()) {
-        	DialogUtil.showWarning(this, "올바르지 않은 입력입니다.");
+            JOptionPane.showMessageDialog(this, "아이디와 비밀번호를 모두 입력해주세요.");
             return;
         }
 
-        // DB 연결 및 검증
-        boolean isValid = LoginDao.verifyLogin(inputId, inputPw);
+        Customer customer = LoginDao.verifyLogin(inputId, inputPw);
 
-        if (isValid) {
+        if (customer != null) {
+            // 세션에 로그인 사용자 ID 저장
+            Session.setCustomerId(customer.getId());
+
             JOptionPane.showMessageDialog(this, "로그인 성공!");
-            dispose(); // 현재 로그인 창 닫기
-            new MainFrame();
+            dispose(); // 로그인 창 닫기
+            new MainFrame(); // 메인 화면 이동
         } else {
             JOptionPane.showMessageDialog(this, "아이디 또는 비밀번호가 틀렸습니다.");
         }
     }
+
 
 }
