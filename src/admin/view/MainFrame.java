@@ -11,7 +11,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.ResultSetMetaData;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Vector;
 
 import javax.swing.*;
@@ -32,6 +34,7 @@ import admin.view.*;
  */
 
 public class MainFrame extends JFrame {
+	private Map<String, AbstractTableCRUDPanel<?>> panelMap = new HashMap<>();
 	private JTree tree;
 	private DefaultMutableTreeNode root;
 	private CardLayout card = new CardLayout();
@@ -102,7 +105,57 @@ public class MainFrame extends JFrame {
 
             // camping_car
             newRoot.add(new DefaultMutableTreeNode("camping_car"));
-            content.add(new CampingCarPanel(), "camping_car");
+            CampingCarPanel carPanel = new CampingCarPanel();
+            content.add(carPanel, "camping_car");
+            panelMap.put("camping_car", carPanel);
+            
+            // company
+            newRoot.add(new DefaultMutableTreeNode("company"));
+            CompanyPanel compPanel = new CompanyPanel();
+            content.add(compPanel, "company");
+            panelMap.put("company", compPanel);
+            
+            // customer
+            newRoot.add(new DefaultMutableTreeNode("customer"));
+            CustomerPanel custPanel = new CustomerPanel();
+            content.add(custPanel, "customer");
+            panelMap.put("customer", custPanel);
+            
+            // external center
+            newRoot.add(new DefaultMutableTreeNode("external_center"));
+            ExternalCenterPanel exCenterPanel = new ExternalCenterPanel();
+            content.add(exCenterPanel, "external_center");
+            panelMap.put("external_center", exCenterPanel);
+            
+            // external maintenance
+            newRoot.add(new DefaultMutableTreeNode("external_maintenance"));
+            ExternalMaintenancePanel exMainPanel = new ExternalMaintenancePanel();
+            content.add(exMainPanel, "external_maintenance");
+            panelMap.put("external_maintenance", exMainPanel);
+            
+            // rental
+            newRoot.add(new DefaultMutableTreeNode("rental"));
+            RentalPanel rentalPanel = new RentalPanel();
+            content.add(rentalPanel, "rental");
+            panelMap.put("rental", rentalPanel);
+            
+            // internal maintenance
+            newRoot.add(new DefaultMutableTreeNode("internal_maintenance"));
+            InternalMaintenancePanel inMainPanel = new InternalMaintenancePanel();
+            content.add(inMainPanel, "internal_maintenance");
+            panelMap.put("internal_maintenance", inMainPanel);
+            
+            // part inventory
+            newRoot.add(new DefaultMutableTreeNode("part_inventory"));
+            PartInventoryPanel partInventoryPanel = new PartInventoryPanel();
+            content.add(partInventoryPanel, "part_inventory");
+            panelMap.put("part_inventory", partInventoryPanel);
+            
+            // staff
+            newRoot.add(new DefaultMutableTreeNode("staff"));
+            StaffPanel staffPanel = new StaffPanel();
+            content.add(staffPanel, "staff");
+            panelMap.put("staff", staffPanel);
             
             root = newRoot;
             tree.setModel(new DefaultTreeModel(root));
@@ -126,8 +179,14 @@ public class MainFrame extends JFrame {
             // 트리가 아닌 메뉴바에서 “DB 초기화” 클릭 시
             onInitialize();
         } else {
-            // 테이블 명(key) 클릭 시 해당 테이블 띄우기
+            // CardLayout으로 해당 키 카드 보여주기
             card.show(content, key);
+
+            // panelMap에 그 키가 있으면, showView() 호출해서 항상 조회 화면으로 리셋
+            AbstractTableCRUDPanel<?> panel = panelMap.get(key);
+            if (panel != null) {
+                panel.showView();
+            }
         }
     }
     
