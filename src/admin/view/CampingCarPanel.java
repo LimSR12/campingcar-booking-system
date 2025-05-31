@@ -5,6 +5,7 @@ import global.entity.CampingCar;
 import global.entity.Company;
 import global.util.DialogUtil;
 import admin.dao.CompanyDao;
+import admin.dao.CustomerDao;
 
 import javax.swing.*;
 import java.awt.*;
@@ -32,14 +33,7 @@ public class CampingCarPanel extends AbstractTableCRUDPanel<CampingCar> {
         JPanel p = new JPanel(new GridLayout(0,2,6,6));
 
         // company_id → 회사명으로 드롭다운
-        List<Company> comps = null;
-		try {
-			comps = new CompanyDao().findAll();
-		} catch (SQLException e) {
-			DialogUtil.showError(this, e.getMessage());
-		}
-        cbCompany = new JComboBox<>(comps.toArray(new Company[0]));
-        cbCompany.setRenderer((i1, i2, i3, i4, i5) -> new JLabel(i2.getName()));
+        cbCompany = new JComboBox<>();
         p.add(new JLabel("회사"));
         p.add(cbCompany);
 
@@ -88,10 +82,35 @@ public class CampingCarPanel extends AbstractTableCRUDPanel<CampingCar> {
         
         return p;
     }
+    
+    // 콤보박스 모델을 매번 최신 상태로 다시 로드해 주는 헬퍼 메서드
+    private void reloadCompanyList() {
+        try {
+            // DAO 통해 최신 회사 리스트 가져오기
+            List<Company> comps = new CompanyDao().findAll();
+
+            // 콤보박스 모델 초기화
+            DefaultComboBoxModel<Company> model = new DefaultComboBoxModel<>();
+            for (Company c : comps) {
+                model.addElement(c);
+            }
+            cbCompany.setModel(model);
+
+            // 화면엔 회사명만 보이도록 렌더러 적용
+            cbCompany.setRenderer((list, value, index, isSelected, cellHasFocus) ->
+                new JLabel(value == null ? "" : value.getName())
+            );
+        } catch (SQLException ex) {
+            DialogUtil.showError(this, ex.getMessage());
+        }
+    }
 
     // 입력 패널 초기 설정
     @Override
     protected void clearAndShowForm() {
+        // 폼을 열기 직전에 최신 회사 목록을 로드
+        reloadCompanyList();
+    	
         cbCompany.setSelectedIndex(0);
         tfName.setText("");
         tfPlate.setText("");
@@ -109,6 +128,7 @@ public class CampingCarPanel extends AbstractTableCRUDPanel<CampingCar> {
     // 저장 버튼 누를 시
     @Override
     protected void saveForm() {
+    	// 이름이 비었는지 확인
         if (tfName.getText().trim().isEmpty()) {
             JOptionPane.showMessageDialog(this, "이름을 입력하세요.", 
                 "입력 오류", JOptionPane.ERROR_MESSAGE);
@@ -116,6 +136,7 @@ public class CampingCarPanel extends AbstractTableCRUDPanel<CampingCar> {
             return;
         }
         
+        // 번호판이 비었는지 확인
         if (tfPlate.getText().trim().isEmpty()) {
             JOptionPane.showMessageDialog(this, "번호판을 입력하세요.", 
                 "입력 오류", JOptionPane.ERROR_MESSAGE);
@@ -123,6 +144,7 @@ public class CampingCarPanel extends AbstractTableCRUDPanel<CampingCar> {
             return;
         }
         
+        // 가격이 비었는지 확인
         String priceText = tfPrice.getText().trim();
         if (priceText.isEmpty()) {
             JOptionPane.showMessageDialog(this, "가격을 입력하세요.", 
@@ -131,6 +153,7 @@ public class CampingCarPanel extends AbstractTableCRUDPanel<CampingCar> {
             return;
         }
         
+        // 가격이 숫자인지 확인
         int price;
         try {
             price = Integer.parseInt(priceText);
@@ -151,12 +174,26 @@ public class CampingCarPanel extends AbstractTableCRUDPanel<CampingCar> {
         }
 
         try {
+        	
+            // DAO를 이용해 중복 체크
+            CampingCarDao cDao = new CampingCarDao();
+            if (cDao.existsByPlateNumber(tfPlate.getText().trim())) {
+                JOptionPane.showMessageDialog(
+                    this,
+                    "이미 등록된 번호판입니다. 다른 번호판을 입력하세요.",
+                    "중복 오류",
+                    JOptionPane.ERROR_MESSAGE
+                );
+                tfPlate.requestFocus();
+                return;
+            }
+        	
             CampingCar c = new CampingCar();
             c.setCompanyId(((Company)cbCompany.getSelectedItem()).getId());
             c.setName(tfName.getText().trim());
             c.setPlateNumber(tfPlate.getText().trim());
             c.setCapacity((Integer)spCap.getValue());
-            c.setRentalPrice(Integer.parseInt(tfPrice.getText().trim()));
+            c.setRentalPrice(price);
             c.setImage(tfImg.getText().trim());
             c.setDetailInfo(taDetail.getText().trim());
             Date dt = (Date)spRegDateTime.getValue();
