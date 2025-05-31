@@ -67,6 +67,24 @@ public class CampingCarDao implements CrudDao<CampingCar> {
             c.getCapacity(), c.getRentalPrice(), c.getRegistrationDate()
         };
     }
+    
+    /*
+    @param plate number 문자열
+    @return 동일한 plate number을 가진 차가 DB에 하나라도 있으면 true, 없으면 false
+    */
+   public boolean existsByPlateNumber(String plateNumber) throws SQLException {
+       String sql = "SELECT COUNT(*) FROM customer WHERE plate_number = ?";
+       try (Connection conn = DBConnection.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql)) {
+           ps.setString(1, plateNumber.trim());
+           try (ResultSet rs = ps.executeQuery()) {
+               if (rs.next()) {
+                   return rs.getInt(1) > 0;
+               }
+           }
+       }
+       return false;
+   }
 
     /* ---------- ResultSet→Entity ---------- */
     private CampingCar map(ResultSet r) throws SQLException {
