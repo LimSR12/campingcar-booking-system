@@ -5,6 +5,8 @@ import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DBInitializer {
 	public static void run() throws Exception {
@@ -53,5 +55,18 @@ public class DBInitializer {
         } catch (Exception e) {
             e.printStackTrace();
         }
+	}
+	
+	public static List<String> getTableNames() throws SQLException {
+		List<String> tables = new ArrayList<>();
+		try (Connection conn = DBConnection.getConnection()) {
+			DatabaseMetaData md = conn.getMetaData();
+			try (ResultSet rs = md.getTables(conn.getCatalog(), conn.getSchema(), "%", new String[]{"TABLE"})) {
+				while (rs.next()) {
+					tables.add(rs.getString("TABLE_NAME"));
+				}
+			}
+		} 
+		return tables;
 	}
 }
