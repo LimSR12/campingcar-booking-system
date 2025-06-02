@@ -190,23 +190,23 @@ public class ExternalMaintenancePanel extends AbstractTableCRUDPanel<ExternalMai
 
     @Override
     protected void clearAndShowForm() {
-        // ① 폼을 열기 직전에 외래키 콤보박스들을 모두 로드
+        // 폼을 열기 직전에 외래키 콤보박스들을 모두 로드
         reloadAllForeignLists();
 
-        // ② 나머지 입력 컴포넌트 초기화
+        // 나머지 입력 컴포넌트 초기화
         taRepairDetails.setText("");
         spRepairDate.setValue(new Date());
         tfRepairFee.setText("");
         spFeeDueDate.setValue(new Date());
         taExtraDetails.setText("");
 
-        // ③ 각 콤보박스를 첫 번째 항목(있으면)으로 선택
+        // 각 콤보박스를 첫 번째 항목(있으면)으로 선택
         if (cbCar.getItemCount() > 0)        cbCar.setSelectedIndex(0);
         if (cbCenter.getItemCount() > 0)     cbCenter.setSelectedIndex(0);
         if (cbCustomer.getItemCount() > 0)   cbCustomer.setSelectedIndex(0);
         if (cbCompany.getItemCount() > 0)    cbCompany.setSelectedIndex(0);
 
-        // ④ FORM 카드로 전환
+        // FORM 카드로 전환
         cards.show(cardPane, "FORM");
     }
 
@@ -305,4 +305,22 @@ public class ExternalMaintenancePanel extends AbstractTableCRUDPanel<ExternalMai
         // --- 저장 성공 후 목록 화면으로 돌아가기 ---
         showView();
     }
+
+	@Override
+	protected void openUpdateByConditionDialog() {
+        Frame parentFrame = (Frame) SwingUtilities.getWindowAncestor(this);
+        ExternalMaintenanceDao emDao = (ExternalMaintenanceDao) super.dao;
+        ExternalMaintenanceUpdate dlg =
+            new ExternalMaintenanceUpdate(parentFrame, emDao, this::refreshTable);
+        dlg.setVisible(true);
+	}
+
+	@Override
+	protected void openDeleteByConditionDialog() {
+        Frame parentFrame = (Frame) SwingUtilities.getWindowAncestor(this);
+        ExternalMaintenanceDao emDao = (ExternalMaintenanceDao) super.dao;
+        ExternalMaintenanceDelete dlg =
+            new ExternalMaintenanceDelete(parentFrame, emDao, this::refreshTable);
+        dlg.setVisible(true);
+	}
 }
