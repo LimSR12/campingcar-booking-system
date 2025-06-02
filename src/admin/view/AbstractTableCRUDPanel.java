@@ -28,16 +28,16 @@ public abstract class AbstractTableCRUDPanel<T> extends JPanel {
         this.columnNames = dao.getColumnNames();
 
         // 툴바
-        JToolBar tb = new JToolBar();
+        JToolBar toolbar = new JToolBar();
         JButton bView = new JButton("조회");
         JButton bNew  = new JButton("입력");
         JButton bUpdate = new JButton("수정");
         JButton bDelete = new JButton("삭제");
-        tb.add(bView);
-        tb.add(bNew);
-        tb.add(bUpdate);
-        tb.add(bDelete);
-        add(tb, BorderLayout.NORTH);
+        toolbar.add(bView);
+        toolbar.add(bNew);
+        toolbar.add(bUpdate);
+        toolbar.add(bDelete);
+        add(toolbar, BorderLayout.NORTH);
 
         // 카드: 목록 / 폼
         cardPane.add(createListPanel(), "VIEW");
