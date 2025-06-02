@@ -46,11 +46,18 @@ public class MyReservationPanel extends JPanel {
         JButton changeDateButton = new JButton("예약 일정 변경");
         changeDateButton.addActionListener(e -> changeRentalDates());
 
+        // 정비 등록 버튼 추가
+        JButton repairBtn = new JButton("정비 등록");
+        repairBtn.addActionListener(e -> {
+        	openRepairDialog();
+        });
+        
         // 버튼 패널
         JPanel btnPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         btnPanel.add(deleteButton);
         btnPanel.add(changeCarButton);
         btnPanel.add(changeDateButton);
+        btnPanel.add(repairBtn);
         add(btnPanel, BorderLayout.SOUTH);
     }
 
@@ -189,5 +196,19 @@ public class MyReservationPanel extends JPanel {
         }
     }
 
+    // 정비 등록 메서드
+    private void openRepairDialog() {
+        int selectedRow = reservationTable.getSelectedRow();
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(this, "정비할 예약을 선택하세요.");
+            return;
+        }
+
+        Long rentalId = (Long) tableModel.getValueAt(selectedRow, 0);
+        Long carId = Long.valueOf(tableModel.getValueAt(selectedRow, 1).toString());
+
+        JFrame parent = (JFrame) SwingUtilities.getWindowAncestor(this);
+        new RepairRequestDialog(parent, carId, rentalId).setVisible(true);
+    }
 
 }

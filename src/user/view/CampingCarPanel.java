@@ -22,7 +22,11 @@ public class CampingCarPanel extends JPanel {
 
     public CampingCarPanel() {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-
+        setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        JLabel titleLabel = new JLabel("캠핑카 전체 조회 및 예약하기");
+        titleLabel.setFont(new Font("맑은 고딕", Font.BOLD, 18));
+        add(titleLabel, BorderLayout.NORTH);
+        
         // 캠핑카 테이블 설정
         String[] columnNames = {"", "캠핑카 이름", "차량 번호", "승차 인원", "대여 비용", "차량 등록일자", "차량 세부정보", "이미지 경로"};
         String[][] data = loadCampingCarData();

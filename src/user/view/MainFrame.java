@@ -11,6 +11,7 @@ public class MainFrame extends JFrame {
     private MyReservationPanel myReservationPanel = new MyReservationPanel();
     
     public static void main(String[] args) {
+    	// 테스트용 main
         new MainFrame();
     }
 
@@ -27,9 +28,9 @@ public class MainFrame extends JFrame {
         menuPanel.setPreferredSize(new Dimension(150, getHeight())); // 폭 고정
 
         // 버튼 생성
-        JButton btnCamping = createMenuButton("캠핑카 조회");
-        JButton btnReservation = createMenuButton("예약 확인");
-        JButton btnRepair = createMenuButton("정비 의뢰");
+        JButton btnCamping = createMenuButton("예약하기");
+        JButton btnReservation = createMenuButton("예약확인");
+        JButton btnRepair = createMenuButton("정비내역");
 
         // 여백 + 버튼 추가
         menuPanel.add(Box.createVerticalStrut(20));
@@ -44,14 +45,20 @@ public class MainFrame extends JFrame {
 
         // 오른쪽 패널 (CardLayout)
         rightPanel.add(new CampingCarPanel(), "camping");
+        rightPanel.add(new ExternalMaintenancePanel(), "maintenance");
         rightPanel.add(myReservationPanel, "reservation");
         add(rightPanel, BorderLayout.CENTER);
 
         // 버튼 이벤트
-        btnCamping.addActionListener(e -> cardLayout.show(rightPanel, "camping"));
+        btnCamping.addActionListener(e -> {
+        	cardLayout.show(rightPanel, "camping");
+        });
         btnReservation.addActionListener(e -> {
         	myReservationPanel.loadReservationData();
         	cardLayout.show(rightPanel, "reservation");
+        });
+        btnRepair.addActionListener(e->{
+        	cardLayout.show(rightPanel, "maintenance");
         });
 
         setVisible(true);
