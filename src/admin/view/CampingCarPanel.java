@@ -39,6 +39,15 @@ public class CampingCarPanel extends AbstractTableCRUDPanel<CampingCar> {
 
     public CampingCarPanel() {
         super(new CampingCarDao());
+        
+        // ‘툴바’ 컴포넌트를 찾아 가져온다
+        JToolBar tb = (JToolBar) ((BorderLayout)getLayout())
+                      .getLayoutComponent(BorderLayout.NORTH);
+
+        // 버튼 추가
+        JButton btnHist = new JButton("내역");
+        tb.add(btnHist);
+        btnHist.addActionListener(e -> openHistoryDialog());
     }
 
     @Override
@@ -388,5 +397,13 @@ public class CampingCarPanel extends AbstractTableCRUDPanel<CampingCar> {
                 return lbl;
             }
         }
+    }
+    
+    private void openHistoryDialog(){
+        int sel = table.getSelectedRow();
+        if(sel==-1){ DialogUtil.showWarning(this,"캠핑카를 선택하세요."); return; }
+        long carId = (long) table.getValueAt(sel,0);        // ID 칼럼
+        Frame f = (Frame) SwingUtilities.getWindowAncestor(this);
+        new CarHistoryDialog(f, carId).setVisible(true);
     }
 }
