@@ -118,6 +118,7 @@ public class RentalDao {
         return rentals;
     }
     
+    // rental id 받아서 삭제하는 메서드
     public void deleteByRentalId(Long id) {
         String sql = "DELETE FROM rental WHERE id = ?";
 
@@ -137,5 +138,70 @@ public class RentalDao {
             e.printStackTrace();
         }
     }
+
+    // 캠핑카 예약 내역 업데이트 하는 메서드
+    public boolean updateCampingCar(Long rentalId, Long newCarId) {
+        String sql = "UPDATE rental SET car_id = ? WHERE id = ?";
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setLong(1, newCarId);
+            pstmt.setLong(2, rentalId);
+            int result = pstmt.executeUpdate();
+            return result > 0;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+    
+    // 캠핑카 id, name 받아오는 DTO
+    public class CampingCarDto {
+        private Long id;
+        private String name;
+
+        public CampingCarDto(Long id, String name) {
+            this.id = id;
+            this.name = name;
+        }
+
+        public Long getId() {
+            return id;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        @Override
+        public String toString() {
+            return name;  // ComboBox에서 보여줄 텍스트
+        }
+    }
+
+    
+    // 전체 캠핑카 id 받아오는 메서드
+    public List<CampingCarDto> getAllCampingCars() {
+        List<CampingCarDto> carList = new ArrayList<>();
+        String sql = "SELECT id, name FROM camping_car";
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql);
+             ResultSet rs = pstmt.executeQuery()) {
+
+            while (rs.next()) {
+                Long id = rs.getLong("id");
+                String name = rs.getString("name");
+                carList.add(new CampingCarDto(id, name));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return carList;
+    }
+
 
 }

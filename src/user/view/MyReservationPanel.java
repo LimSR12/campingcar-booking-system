@@ -3,6 +3,7 @@ package user.view;
 import global.entity.Rental;
 import global.session.Session;
 import user.dao.RentalDao;
+import user.dao.RentalDao.CampingCarDto;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -31,11 +32,24 @@ public class MyReservationPanel extends JPanel {
 
         // 데이터 불러오기
         loadReservationData();
-        
+                
         // 삭제 버튼 추가
-        JButton deleteButton = new JButton("선택 삭제");
+        JButton deleteButton = new JButton("선택한 예약내역 삭제");
         deleteButton.addActionListener(e -> deleteSelectedReservation());
-        add(deleteButton, BorderLayout.SOUTH);
+        
+        // 캠핑카 변경 버튼 추가
+        JButton changeCarButton = new JButton("예약한 캠핑카 변경");
+        changeCarButton.addActionListener(e -> changeCampingCar());
+        
+        // 예약 일정 변경 버튼 추가
+        JButton changeDateButton = new JButton("예약 일정 변경");
+        changeDateButton.addActionListener(null);
+
+        // 버튼 패널
+        JPanel btnPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        btnPanel.add(deleteButton);
+        btnPanel.add(changeCarButton);
+        add(btnPanel, BorderLayout.SOUTH);
     }
 
     // 예약정보 받아오는 메서드
@@ -80,5 +94,39 @@ public class MyReservationPanel extends JPanel {
         loadReservationData();  // 삭제 후 테이블 새로고침
         JOptionPane.showMessageDialog(this, "삭제가 완료되었습니다.");
     }
+
+    // 캠핑카 예약 변경하는 메서드
+    private void changeCampingCar() {
+        int selectedRow = reservationTable.getSelectedRow();
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(this, "변경할 예약을 선택하세요.");
+            return;
+        }
+
+        Long rentalId = (Long) tableModel.getValueAt(selectedRow, 0);
+        RentalDao rentalDao = new RentalDao();
+        List<CampingCarDto> carList = rentalDao.getAllCampingCars();
+
+        if (carList.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "변경 가능한 캠핑카가 없습니다.");
+            return;
+        }
+
+        JComboBox<CampingCarDto> comboBox = new JComboBox<>(carList.toArray(new CampingCarDto[0]));
+        int result = JOptionPane.showConfirmDialog(this, comboBox, "변경할 캠핑카 선택", JOptionPane.OK_CANCEL_OPTION);
+
+        if (result == JOptionPane.OK_OPTION) {
+            CampingCarDto selectedCar = (CampingCarDto) comboBox.getSelectedItem();
+            boolean success = rentalDao.updateCampingCar(rentalId, selectedCar.getId());
+
+            if (success) {
+                JOptionPane.showMessageDialog(this, "캠핑카가 성공적으로 변경되었습니다.");
+                loadReservationData();
+            } else {
+                JOptionPane.showMessageDialog(this, "변경에 실패했습니다.");
+            }
+        }
+    }
+
 
 }
