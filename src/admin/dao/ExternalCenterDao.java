@@ -161,4 +161,15 @@ public class ExternalCenterDao implements CrudDao<ExternalCenter> {
             }
         }
     }
+    
+    public ExternalCenter findById(long centerId) throws SQLException {
+        String sql = "SELECT * FROM external_center WHERE id = ?";
+        try (Connection c = DBConnection.getConnection();
+             PreparedStatement ps = c.prepareStatement(sql)) {
+            ps.setLong(1, centerId);
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next() ? map(rs) : null;
+            }
+        }
+    }
 }

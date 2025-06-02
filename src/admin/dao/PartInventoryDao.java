@@ -113,4 +113,15 @@ public class PartInventoryDao implements CrudDao<PartInventory> {
             finally{ conn.setAutoCommit(true); }
         }
     }
+    
+    public PartInventory findById(long partId) throws SQLException {
+        String sql = "SELECT * FROM part_inventory WHERE id = ?";
+        try (Connection c = DBConnection.getConnection();
+             PreparedStatement ps = c.prepareStatement(sql)) {
+            ps.setLong(1, partId);
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next() ? map(rs) : null;   // map(...)은 이미 있는 private 메서드
+            }
+        }
+    }
 }
