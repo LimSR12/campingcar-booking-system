@@ -139,6 +139,8 @@ public class MyReservationPanel extends JPanel {
         }
 
         Long rentalId = (Long) tableModel.getValueAt(selectedRow, 0);
+        Long carId = Long.valueOf(tableModel.getValueAt(selectedRow, 1).toString());
+
         String startInput = JOptionPane.showInputDialog(this, "새 대여 시작일을 입력하세요 (yyyy-MM-dd):");
         String endInput = JOptionPane.showInputDialog(this, "새 반납일을 입력하세요 (yyyy-MM-dd):");
 
@@ -152,7 +154,19 @@ public class MyReservationPanel extends JPanel {
             }
 
             RentalDao dao = new RentalDao();
-            boolean success = dao.updateRentalDates(rentalId, newStart, newEnd);
+
+            // 중복 예약 여부 확인
+            boolean overlapping = dao.isDateOverlapping(rentalId, carId, newStart, newEnd);
+            if (overlapping) {
+                JOptionPane.showMessageDialog(this, "해당 날짜에 이미 예약이 존재합니다.");
+                return;
+            }
+
+            // 단가 조회
+            int unitPrice = dao.getCampingCarPrice(carId);
+
+            // 요금까지 포함해서 날짜 업데이트
+            boolean success = dao.updateRentalDates(rentalId, newStart, newEnd, unitPrice);
 
             if (success) {
                 JOptionPane.showMessageDialog(this, "날짜가 성공적으로 변경되었습니다.");

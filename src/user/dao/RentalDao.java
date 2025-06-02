@@ -204,19 +204,20 @@ public class RentalDao {
     }
 
     // 예약 일정 변경 메서드
-    public boolean updateRentalDates(Long rentalId, LocalDate newStartDate, LocalDate newReturnDate) {
-        String sql = "UPDATE rental SET start_date = ?, return_date = ?, rental_days = ? WHERE id = ?";
+    public boolean updateRentalDates(Long rentalId, LocalDate newStartDate, LocalDate newReturnDate, int unitPrice) {
+        String sql = "UPDATE rental SET start_date = ?, return_date = ?, rental_days = ?, rental_fee = ? WHERE id = ?";
 
-//        System.out.println("start: " + newStartDate + ", end: " + newReturnDate);
-//        System.out.println("calculated days: " + (newReturnDate.toEpochDay() - newStartDate.toEpochDay() + 1));
+        int rentalDays = (int) (newReturnDate.toEpochDay() - newStartDate.toEpochDay()) + 1;
+        double newFee = unitPrice * rentalDays;
 
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-            pstmt.setTimestamp(1, java.sql.Timestamp.valueOf(newStartDate.atStartOfDay()));
-            pstmt.setTimestamp(2, java.sql.Timestamp.valueOf(newReturnDate.atStartOfDay()));
-            pstmt.setInt(3, (int) (newReturnDate.toEpochDay() - newStartDate.toEpochDay() + 1));
-            pstmt.setLong(4, rentalId);
+            pstmt.setTimestamp(1, Timestamp.valueOf(newStartDate.atStartOfDay()));
+            pstmt.setTimestamp(2, Timestamp.valueOf(newReturnDate.atStartOfDay()));
+            pstmt.setInt(3, rentalDays);
+            pstmt.setDouble(4, newFee);
+            pstmt.setLong(5, rentalId);
 
             return pstmt.executeUpdate() > 0;
 
@@ -224,6 +225,66 @@ public class RentalDao {
             e.printStackTrace();
             return false;
         }
+    }
+
+    
+    // 선택한 기간에 이미 예약되어있는지 확인하는 메서드
+    public boolean isDateOverlapping(Long rentalId, Long carId, LocalDate newStart, LocalDate newEnd) {
+        String sql = """
+            SELECT COUNT(*) 
+            FROM rental 
+            WHERE car_id = ? 
+              AND id != ? 
+              AND (
+                (start_date <= ? AND return_date >= ?) OR
+                (start_date <= ? AND return_date >= ?) OR
+                (start_date >= ? AND return_date <= ?)
+              )
+        """;
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setLong(1, carId);
+            pstmt.setLong(2, rentalId);
+            pstmt.setTimestamp(3, Timestamp.valueOf(newEnd.atStartOfDay()));   // 기존 예약이 끝나는 날 >= 새 시작일
+            pstmt.setTimestamp(4, Timestamp.valueOf(newStart.atStartOfDay()));
+            pstmt.setTimestamp(5, Timestamp.valueOf(newStart.atStartOfDay())); // 기존 예약이 시작하는 날 <= 새 종료일
+            pstmt.setTimestamp(6, Timestamp.valueOf(newEnd.atStartOfDay()));
+            pstmt.setTimestamp(7, Timestamp.valueOf(newStart.atStartOfDay())); // 전체를 덮는 경우
+            pstmt.setTimestamp(8, Timestamp.valueOf(newEnd.atStartOfDay()));
+
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return true;
+    }
+    
+    // 캠핑카 예약 가격 가져오는 메서드
+    public int getCampingCarPrice(Long carId) {
+        String sql = "SELECT rental_price FROM camping_car WHERE id = ?";
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setLong(1, carId);
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt("rental_price");
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return 0; // 조회 실패 시 0원 처리
     }
 
 }
