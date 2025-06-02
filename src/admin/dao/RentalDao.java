@@ -4,7 +4,9 @@ import global.db.DBConnection;
 import global.entity.Rental;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 public class RentalDao implements CrudDao<Rental> {
 
@@ -77,16 +79,36 @@ public class RentalDao implements CrudDao<Rental> {
         rnt.setExtraFee(r.getDouble("extra_fee"));
         return rnt;
     }
-
+    
 	@Override
-	public void update(Rental t) throws SQLException {
-		// TODO Auto-generated method stub
-		
+	public int updateByCondition(Map<String, Object> newValues, String condition) throws SQLException {
+        if (newValues==null || newValues.isEmpty() || condition==null || condition.isBlank()) return 0;
+
+        StringBuilder set = new StringBuilder();
+        List<Object>   ps  = new ArrayList<>();
+        for (var e: newValues.entrySet()) {
+            if (set.length()>0) set.append(", ");
+            set.append(e.getKey()).append(" = ?");
+            ps.add(e.getValue());
+        }
+        String sql = "UPDATE rental SET " + set + " WHERE " + condition;
+
+        try (Connection c = DBConnection.getConnection();
+             PreparedStatement p = c.prepareStatement(sql)) {
+            for (int i=0;i<ps.size();i++) p.setObject(i+1, ps.get(i));
+            return p.executeUpdate();
+        }
 	}
 
 	@Override
-	public void delete(Long id) throws SQLException {
-		// TODO Auto-generated method stub
-		
+	public Map<String,Integer> deleteByCondition(String condition) throws SQLException {
+        if(condition==null||condition.isBlank()) return Collections.emptyMap();
+
+        String sql="DELETE FROM rental WHERE "+condition;
+        try(Connection c=DBConnection.getConnection();
+            Statement st=c.createStatement()){
+            int n = st.executeUpdate(sql);
+            return Collections.singletonMap("rental", n);
+        }
 	}
 }

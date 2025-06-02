@@ -4,6 +4,7 @@ package admin.view;
 import admin.dao.CampingCarDao;
 import admin.dao.CompanyDao;
 import admin.dao.CustomerDao;
+import admin.dao.PartInventoryDao;
 import admin.dao.RentalDao;
 import global.entity.CampingCar;
 import global.entity.Company;
@@ -420,4 +421,20 @@ public class RentalPanel extends AbstractTableCRUDPanel<Rental> {
         // 저장 성공 후 목록 화면으로 돌아가기
         showView();
     }
+    
+	@Override
+	protected void openUpdateByConditionDialog() {
+        Frame parentFrame = (Frame) SwingUtilities.getWindowAncestor(this);
+        RentalDao eDao = (RentalDao) super.dao;
+        RentalUpdate dlg = new RentalUpdate(parentFrame, eDao, this::refreshTable);
+        dlg.setVisible(true);
+	}
+
+	@Override
+	protected void openDeleteByConditionDialog() {
+        Frame parentFrame = (Frame) SwingUtilities.getWindowAncestor(this);
+        RentalDao eDao = (RentalDao) super.dao;
+        RentalDelete dlg = new RentalDelete(parentFrame, eDao, this::refreshTable);
+        dlg.setVisible(true);
+	}
 }
