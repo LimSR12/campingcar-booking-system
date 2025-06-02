@@ -40,6 +40,8 @@ public class MainFrame extends JFrame {
 	private CardLayout card = new CardLayout();
 	private JPanel content = new JPanel(card);
 	private boolean initialized = false; // DB 초기화 여부 플래그
+	
+	private final JButton btnQuery = new JButton("SQL Query");
 
     public MainFrame() {
         setTitle("관리자 콘솔");
@@ -54,6 +56,11 @@ public class MainFrame extends JFrame {
         JButton allBtn  = new JButton("전체 테이블 보기");
         topButtons.add(initBtn);
         topButtons.add(allBtn);
+        
+        btnQuery.setVisible(false);
+        topButtons.add(btnQuery);
+        btnQuery.addActionListener(e -> new SimpleQueryDialog(this).setVisible(true));
+        
         getContentPane().add(topButtons, BorderLayout.NORTH);
         
         initBtn.addActionListener(e -> onInitialize());
@@ -93,6 +100,8 @@ public class MainFrame extends JFrame {
             DBInitializer.run();
             initialized = true;
             DialogUtil.showInfo(this, "DB 초기화 완료!");
+            
+            btnQuery.setVisible(true);
 
             // 메뉴에서 전체 테이블 보기 선택 시 켜질 ALL 카드 준비
             content.add(makeAllTablesPanel(), "ALL");
