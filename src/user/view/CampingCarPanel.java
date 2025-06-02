@@ -101,6 +101,12 @@ public class CampingCarPanel extends JPanel {
                 JOptionPane.showMessageDialog(null, "예약할 캠핑카를 선택하세요.");
                 return;
             }
+            
+            // 예약 조회 버튼 안누르고 예약하기 누르는 경우 방지
+            if (calendarPanel == null) {
+                JOptionPane.showMessageDialog(null, "먼저 대여 가능 일자를 조회하세요.");
+                return;
+            }
 
             // 캠핑카 정보 추출
             Long carId = Long.valueOf(table.getValueAt(selectedRow, 0).toString());
