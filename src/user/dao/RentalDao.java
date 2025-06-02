@@ -104,14 +104,32 @@ public class RentalDao {
                 rental.setReturnDate(rs.getTimestamp("return_date").toLocalDateTime());
                 rental.setRentalDays(rs.getInt("rental_days"));
                 rental.setRentalFee(rs.getDouble("rental_fee"));
-                rental.setFeeDueDate(rs.getTimestamp("fee_due_date").toLocalDateTime());
+//                rental.setFeeDueDate(rs.getTimestamp("fee_due_date").toLocalDateTime());
+                Timestamp ts = rs.getTimestamp("fee_due_date");
+                if (ts != null) {
+                    rental.setFeeDueDate(ts.toLocalDateTime());
+                } else {
+                    rental.setFeeDueDate(null); 
+                }
+
                 rental.setExtraDetails(rs.getString("extra_details"));
+//                Object extraFeeObj = rs.getObject("extra_fee");
+//                if (extraFeeObj != null) {
+//                    rental.setExtraFee(rs.getDouble("extra_fee"));
+//                } else {
+//                    rental.setExtraFee(null);
+//                }
+
                 rental.setExtraFee(rs.getObject("extra_fee") != null ? rs.getDouble("extra_fee") : null);
 
                 rentals.add(rental);
             }
 
         } catch (SQLException e) {
+        	System.out.println("SQL 에러 발생:");
+            System.out.println("메시지: " + e.getMessage());
+            System.out.println("SQL 상태: " + e.getSQLState());
+            System.out.println("에러 코드: " + e.getErrorCode());
             e.printStackTrace();
         }
 

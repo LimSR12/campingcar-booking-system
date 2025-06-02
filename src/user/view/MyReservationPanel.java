@@ -32,7 +32,7 @@ public class MyReservationPanel extends JPanel {
         add(new JScrollPane(reservationTable), BorderLayout.CENTER);
 
         // 데이터 불러오기
-        loadReservationData();
+        //loadReservationData();
                 
         // 삭제 버튼 추가
         JButton deleteButton = new JButton("선택한 예약내역 삭제");
