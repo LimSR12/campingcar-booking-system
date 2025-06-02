@@ -22,7 +22,11 @@ public class CampingCarPanel extends JPanel {
 
     public CampingCarPanel() {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-
+        setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        JLabel titleLabel = new JLabel("캠핑카 전체 조회 및 예약하기");
+        titleLabel.setFont(new Font("맑은 고딕", Font.BOLD, 18));
+        add(titleLabel, BorderLayout.NORTH);
+        
         // 캠핑카 테이블 설정
         String[] columnNames = {"", "캠핑카 이름", "차량 번호", "승차 인원", "대여 비용", "차량 등록일자", "차량 세부정보", "이미지 경로"};
         String[][] data = loadCampingCarData();
@@ -99,6 +103,12 @@ public class CampingCarPanel extends JPanel {
             int selectedRow = table.getSelectedRow();
             if (selectedRow == -1) {
                 JOptionPane.showMessageDialog(null, "예약할 캠핑카를 선택하세요.");
+                return;
+            }
+            
+            // 예약 조회 버튼 안누르고 예약하기 누르는 경우 방지
+            if (calendarPanel == null) {
+                JOptionPane.showMessageDialog(null, "먼저 대여 가능 일자를 조회하세요.");
                 return;
             }
 
