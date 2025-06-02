@@ -203,5 +203,27 @@ public class RentalDao {
         return carList;
     }
 
+    // 예약 일정 변경 메서드
+    public boolean updateRentalDates(Long rentalId, LocalDate newStartDate, LocalDate newReturnDate) {
+        String sql = "UPDATE rental SET start_date = ?, return_date = ?, rental_days = ? WHERE id = ?";
+
+//        System.out.println("start: " + newStartDate + ", end: " + newReturnDate);
+//        System.out.println("calculated days: " + (newReturnDate.toEpochDay() - newStartDate.toEpochDay() + 1));
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setTimestamp(1, java.sql.Timestamp.valueOf(newStartDate.atStartOfDay()));
+            pstmt.setTimestamp(2, java.sql.Timestamp.valueOf(newReturnDate.atStartOfDay()));
+            pstmt.setInt(3, (int) (newReturnDate.toEpochDay() - newStartDate.toEpochDay() + 1));
+            pstmt.setLong(4, rentalId);
+
+            return pstmt.executeUpdate() > 0;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 
 }

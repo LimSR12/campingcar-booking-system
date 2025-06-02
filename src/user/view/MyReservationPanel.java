@@ -8,6 +8,7 @@ import user.dao.RentalDao.CampingCarDto;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
@@ -43,12 +44,13 @@ public class MyReservationPanel extends JPanel {
         
         // 예약 일정 변경 버튼 추가
         JButton changeDateButton = new JButton("예약 일정 변경");
-        changeDateButton.addActionListener(null);
+        changeDateButton.addActionListener(e -> changeRentalDates());
 
         // 버튼 패널
         JPanel btnPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         btnPanel.add(deleteButton);
         btnPanel.add(changeCarButton);
+        btnPanel.add(changeDateButton);
         add(btnPanel, BorderLayout.SOUTH);
     }
 
@@ -125,6 +127,42 @@ public class MyReservationPanel extends JPanel {
             } else {
                 JOptionPane.showMessageDialog(this, "변경에 실패했습니다.");
             }
+        }
+    }
+    
+    // 예약 일정 변경하는 메서드
+    private void changeRentalDates() {
+        int selectedRow = reservationTable.getSelectedRow();
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(this, "변경할 예약을 선택하세요.");
+            return;
+        }
+
+        Long rentalId = (Long) tableModel.getValueAt(selectedRow, 0);
+        String startInput = JOptionPane.showInputDialog(this, "새 대여 시작일을 입력하세요 (yyyy-MM-dd):");
+        String endInput = JOptionPane.showInputDialog(this, "새 반납일을 입력하세요 (yyyy-MM-dd):");
+
+        try {
+            LocalDate newStart = LocalDate.parse(startInput);
+            LocalDate newEnd = LocalDate.parse(endInput);
+
+            if (newEnd.isBefore(newStart)) {
+                JOptionPane.showMessageDialog(this, "반납일은 대여 시작일 이후여야 합니다.");
+                return;
+            }
+
+            RentalDao dao = new RentalDao();
+            boolean success = dao.updateRentalDates(rentalId, newStart, newEnd);
+
+            if (success) {
+                JOptionPane.showMessageDialog(this, "날짜가 성공적으로 변경되었습니다.");
+                loadReservationData();
+            } else {
+                JOptionPane.showMessageDialog(this, "날짜 변경에 실패했습니다.");
+            }
+
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, "날짜 형식을 확인하세요 (예: 2025-06-01)");
         }
     }
 
