@@ -73,4 +73,20 @@ public class ExternalCenterPanel extends AbstractTableCRUDPanel<ExternalCenter> 
         }
         showView();
     }
+
+	@Override
+	protected void openUpdateByConditionDialog() {
+        Frame parentFrame = (Frame) SwingUtilities.getWindowAncestor(this);
+        ExternalCenterDao eDao = (ExternalCenterDao) super.dao;
+        ExternalCenterUpdate dlg = new ExternalCenterUpdate(parentFrame, eDao, this::refreshTable);
+        dlg.setVisible(true);
+	}
+
+	@Override
+	protected void openDeleteByConditionDialog() {
+        Frame parentFrame = (Frame) SwingUtilities.getWindowAncestor(this);
+        ExternalCenterDao eDao = (ExternalCenterDao) super.dao;
+        ExternalCenterDelete dlg = new ExternalCenterDelete(parentFrame, eDao, this::refreshTable);
+        dlg.setVisible(true);
+	}
 }

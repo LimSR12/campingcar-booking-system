@@ -4,7 +4,10 @@ import global.db.DBConnection;
 import global.entity.Staff;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 public class StaffDao implements CrudDao<Staff> {
 
@@ -64,15 +67,53 @@ public class StaffDao implements CrudDao<Staff> {
         return s;
     }
 
-	@Override
-	public void update(Staff t) throws SQLException {
-		// TODO Auto-generated method stub
-		
-	}
+    @Override
+    public int updateByCondition(Map<String,Object> v,String cond)throws SQLException{
+        if(v==null||v.isEmpty()||cond==null||cond.isBlank()) return 0;
+        StringBuilder sb=new StringBuilder(); List<Object> ps=new ArrayList<>();
+        for(var e:v.entrySet()){ if(sb.length()>0) sb.append(", "); sb.append(e.getKey()).append("=?"); ps.add(e.getValue());}
+        String sql="UPDATE staff SET "+sb+" WHERE "+cond;
+        try(Connection c=DBConnection.getConnection(); PreparedStatement p=c.prepareStatement(sql)){
+            for(int i=0;i<ps.size();i++) p.setObject(i+1,ps.get(i));
+            return p.executeUpdate();
+        }
+    }
 
-	@Override
-	public void delete(Long id) throws SQLException {
-		// TODO Auto-generated method stub
-		
-	}
+    /** staff 삭제 시 → 자식 internal_maintenance 먼저 */
+    @Override
+    public Map<String,Integer> deleteByCondition(String cond)throws SQLException{
+        if(cond==null||cond.isBlank()) return Collections.emptyMap();
+        Map<String,Integer> out=new LinkedHashMap<>();
+        try(Connection conn=DBConnection.getConnection()){
+            conn.setAutoCommit(false);
+            try{
+                // 대상 staff id
+                List<Long> ids=new ArrayList<>();
+                try(Statement st=conn.createStatement();
+                    ResultSet rs=st.executeQuery("SELECT id FROM staff WHERE "+cond)){
+                    while(rs.next()) ids.add(rs.getLong("id"));
+                }
+                if(ids.isEmpty()){ conn.rollback(); return Collections.emptyMap(); }
+
+                // 자식 internal_maintenance
+                int delIM=0;
+                try(PreparedStatement ps=conn.prepareStatement(
+                        "DELETE FROM internal_maintenance WHERE staff_id=?")){
+                    for(Long id:ids){ ps.setLong(1,id); delIM+=ps.executeUpdate(); }
+                }
+                out.put("internal_maintenance",delIM);
+
+                // 부모 staff
+                int delStaff=0;
+                try(PreparedStatement ps=conn.prepareStatement(
+                        "DELETE FROM staff WHERE id=?")){
+                    for(Long id:ids){ ps.setLong(1,id); delStaff+=ps.executeUpdate(); }
+                }
+                out.put("staff",delStaff);
+
+                conn.commit(); return out;
+            }catch(SQLException ex){ conn.rollback(); throw ex; }
+            finally{ conn.setAutoCommit(true);}
+        }
+    }
 }

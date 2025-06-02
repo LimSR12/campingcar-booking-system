@@ -4,7 +4,9 @@ import global.db.DBConnection;
 import global.entity.InternalMaintenance;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 public class InternalMaintenanceDao implements CrudDao<InternalMaintenance> {
 
@@ -67,14 +69,38 @@ public class InternalMaintenanceDao implements CrudDao<InternalMaintenance> {
     }
 
 	@Override
-	public void update(InternalMaintenance t) throws SQLException {
-		// TODO Auto-generated method stub
-		
+	public int updateByCondition(Map<String, Object> newValues, String condition) throws SQLException {
+        if(newValues==null||newValues.isEmpty()||condition==null||condition.isBlank()) return 0;
+        StringBuilder sb=new StringBuilder(); List<Object> ps=new ArrayList<>();
+        for(var e:newValues.entrySet()){ if(sb.length()>0) sb.append(", "); sb.append(e.getKey()).append("=?"); ps.add(e.getValue());}
+        String sql="UPDATE internal_maintenance SET "+sb+" WHERE "+condition;
+        try(Connection c=DBConnection.getConnection(); PreparedStatement p=c.prepareStatement(sql)){
+            for(int i=0;i<ps.size();i++) p.setObject(i+1,ps.get(i));
+            return p.executeUpdate();
+        }
 	}
 
-	@Override
-	public void delete(Long id) throws SQLException {
-		// TODO Auto-generated method stub
-		
-	}
+    @Override
+    public Map<String,Integer> deleteByCondition(String cond)throws SQLException{
+        if(cond==null||cond.isBlank()) return Collections.emptyMap();
+        String sql="DELETE FROM internal_maintenance WHERE "+cond;
+        try(Connection c=DBConnection.getConnection(); Statement st=c.createStatement()){
+            int n=st.executeUpdate(sql);
+            return Collections.singletonMap("internal_maintenance",n);
+        }
+    }
+    
+    public List<InternalMaintenance> findByCarId(long carId) throws SQLException {
+        String sql = "SELECT * FROM internal_maintenance WHERE car_id=? ORDER BY repair_date DESC";
+        List<InternalMaintenance> list = new ArrayList<>();
+        try (Connection c = DBConnection.getConnection();
+             PreparedStatement ps = c.prepareStatement(sql)) {
+            ps.setLong(1, carId);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) list.add(map(rs));
+            }
+        }
+        return list;
+    }
+
 }

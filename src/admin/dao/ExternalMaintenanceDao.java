@@ -4,7 +4,10 @@ import global.db.DBConnection;
 import global.entity.ExternalMaintenance;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ExternalMaintenanceDao implements CrudDao<ExternalMaintenance> {
 
@@ -87,14 +90,103 @@ public class ExternalMaintenanceDao implements CrudDao<ExternalMaintenance> {
     }
 
 	@Override
-	public void update(ExternalMaintenance t) throws SQLException {
-		// TODO Auto-generated method stub
-		
+	public int updateByCondition(Map<String, Object> newValues, String condition) throws SQLException {
+        if (newValues == null || newValues.isEmpty() || condition == null || condition.trim().isEmpty()) {
+            return 0;
+        }
+
+        // 1) SET 절 조립
+        StringBuilder setClause = new StringBuilder();
+        List<Object> params = new ArrayList<>();
+        for (Map.Entry<String, Object> entry : newValues.entrySet()) {
+            if (setClause.length() > 0) {
+                setClause.append(", ");
+            }
+            setClause.append(entry.getKey()).append(" = ?");
+            params.add(entry.getValue());
+        }
+
+        // 2) SQL 완성
+        String sql = "UPDATE external_maintenance SET " + setClause + " WHERE " + condition;
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            for (int i = 0; i < params.size(); i++) {
+                ps.setObject(i + 1, params.get(i));
+            }
+            return ps.executeUpdate();
+        }
+	}
+	
+	/*
+    * 7) 조건식 기반 삭제
+    *    - 자식 테이블이 없으므로 바로 본 테이블 삭제
+    * @param condition  WHERE 뒤에 바로 붙일 삭제 조건 예: "repair_fee < 50000 AND company_id = 3"
+    * @return Map&lt;테이블명, 삭제건수&gt;, 여기서는 {"external_maintenance"=삭제건수}
+    */
+   public Map<String, Integer> deleteByCondition(String condition) throws SQLException {
+       if (condition == null || condition.trim().isEmpty()) {
+           return Collections.emptyMap();
+       }
+
+       Map<String, Integer> deletedCounts = new LinkedHashMap<>();
+
+       try (Connection conn = DBConnection.getConnection()) {
+           conn.setAutoCommit(false);
+
+           try {
+               // 1) 삭제할 행들 ID 목록 조회
+               String sqlSelectIds = "SELECT id FROM external_maintenance WHERE " + condition;
+               List<Long> ids = new ArrayList<>();
+               try (Statement st = conn.createStatement();
+                    ResultSet rs = st.executeQuery(sqlSelectIds)) {
+                   while (rs.next()) {
+                       ids.add(rs.getLong("id"));
+                   }
+               }
+
+               if (ids.isEmpty()) {
+                   conn.rollback();
+                   return Collections.emptyMap();
+               }
+
+               // 2) 본 테이블(external_maintenance)에서 해당 ID들 삭제
+               String sqlDel = "DELETE FROM external_maintenance WHERE id = ?";
+               int countDel = 0;
+               try (PreparedStatement ps = conn.prepareStatement(sqlDel)) {
+                   for (Long id : ids) {
+                       ps.setLong(1, id);
+                       countDel += ps.executeUpdate();
+                   }
+               }
+               deletedCounts.put("external_maintenance", countDel);
+
+               conn.commit();
+               return deletedCounts;
+
+           } catch (SQLException ex) {
+               conn.rollback();
+               throw ex;
+           } finally {
+               conn.setAutoCommit(true);
+           }
+       }
+   }
+   
+   public List<ExternalMaintenance> findByCarId(long carId) throws SQLException {
+	    String sql = "SELECT * FROM external_maintenance WHERE car_id = ? ORDER BY repair_date";
+	    List<ExternalMaintenance> list = new ArrayList<>();
+
+	    try (Connection c = DBConnection.getConnection();
+	         PreparedStatement ps = c.prepareStatement(sql)) {
+
+	        ps.setLong(1, carId);
+	        try (ResultSet rs = ps.executeQuery()) {
+	            while (rs.next()) list.add(map(rs));
+	        }
+	    }
+	    return list;
 	}
 
-	@Override
-	public void delete(Long id) throws SQLException {
-		// TODO Auto-generated method stub
-		
-	}
 }

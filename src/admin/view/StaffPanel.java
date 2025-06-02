@@ -1,5 +1,6 @@
 package admin.view;
 
+import admin.dao.PartInventoryDao;
 import admin.dao.StaffDao;
 import global.entity.Staff;
 import global.util.DialogUtil;
@@ -183,4 +184,20 @@ public class StaffPanel extends AbstractTableCRUDPanel<Staff> {
 
         showView();
     }
+    
+	@Override
+	protected void openUpdateByConditionDialog() {
+        Frame parentFrame = (Frame) SwingUtilities.getWindowAncestor(this);
+        StaffDao eDao = (StaffDao) super.dao;
+        StaffUpdate dlg = new StaffUpdate(parentFrame, eDao, this::refreshTable);
+        dlg.setVisible(true);
+	}
+
+	@Override
+	protected void openDeleteByConditionDialog() {
+        Frame parentFrame = (Frame) SwingUtilities.getWindowAncestor(this);
+        StaffDao eDao = (StaffDao) super.dao;
+        StaffDelete dlg = new StaffDelete(parentFrame, eDao, this::refreshTable);
+        dlg.setVisible(true);
+	}
 }

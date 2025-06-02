@@ -96,4 +96,20 @@ public class CompanyPanel extends AbstractTableCRUDPanel<Company> {
         }
         showView();
     }
+
+	@Override
+	protected void openUpdateByConditionDialog() {
+        Frame parentFrame = (Frame) SwingUtilities.getWindowAncestor(this);
+        CompanyDao dao = (CompanyDao) super.dao;
+        CompanyUpdate dlg = new CompanyUpdate(parentFrame, dao, this::refreshTable);
+        dlg.setVisible(true);
+	}
+
+	@Override
+	protected void openDeleteByConditionDialog() {
+        Frame parentFrame = (Frame) SwingUtilities.getWindowAncestor(this);
+        CompanyDao dao = (CompanyDao) super.dao;
+        CompanyDelete dlg = new CompanyDelete(parentFrame, dao, this::refreshTable);
+        dlg.setVisible(true);
+	}
 }

@@ -1,5 +1,6 @@
 package admin.view;
 
+import admin.dao.InternalMaintenanceDao;
 import admin.dao.PartInventoryDao;
 import global.entity.PartInventory;
 import global.util.DialogUtil;
@@ -159,4 +160,20 @@ public class PartInventoryPanel extends AbstractTableCRUDPanel<PartInventory> {
 
         showView();
     }
+    
+	@Override
+	protected void openUpdateByConditionDialog() {
+        Frame parentFrame = (Frame) SwingUtilities.getWindowAncestor(this);
+        PartInventoryDao eDao = (PartInventoryDao) super.dao;
+        PartInventoryUpdate dlg = new PartInventoryUpdate(parentFrame, eDao, this::refreshTable);
+        dlg.setVisible(true);
+	}
+
+	@Override
+	protected void openDeleteByConditionDialog() {
+        Frame parentFrame = (Frame) SwingUtilities.getWindowAncestor(this);
+        PartInventoryDao eDao = (PartInventoryDao) super.dao;
+        PartInventoryDelete dlg = new PartInventoryDelete(parentFrame, eDao, this::refreshTable);
+        dlg.setVisible(true);
+	}
 }

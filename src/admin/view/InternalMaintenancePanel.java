@@ -1,6 +1,7 @@
 package admin.view;
 
 import admin.dao.CampingCarDao;
+import admin.dao.ExternalCenterDao;
 import admin.dao.InternalMaintenanceDao;
 import admin.dao.PartInventoryDao;
 import admin.dao.StaffDao;
@@ -266,4 +267,20 @@ public class InternalMaintenancePanel extends AbstractTableCRUDPanel<InternalMai
         // 저장 성공 후 목록 화면으로 전환
         showView();
     }
+
+	@Override
+	protected void openUpdateByConditionDialog() {
+        Frame parentFrame = (Frame) SwingUtilities.getWindowAncestor(this);
+        InternalMaintenanceDao eDao = (InternalMaintenanceDao) super.dao;
+        InternalMaintenanceUpdate dlg = new InternalMaintenanceUpdate(parentFrame, eDao, this::refreshTable);
+        dlg.setVisible(true);
+	}
+
+	@Override
+	protected void openDeleteByConditionDialog() {
+        Frame parentFrame = (Frame) SwingUtilities.getWindowAncestor(this);
+        InternalMaintenanceDao eDao = (InternalMaintenanceDao) super.dao;
+        InternalMaintenanceDelete dlg = new InternalMaintenanceDelete(parentFrame, eDao, this::refreshTable);
+        dlg.setVisible(true);
+	}
 }
