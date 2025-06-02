@@ -89,4 +89,18 @@ public class InternalMaintenanceDao implements CrudDao<InternalMaintenance> {
             return Collections.singletonMap("internal_maintenance",n);
         }
     }
+    
+    public List<InternalMaintenance> findByCarId(long carId) throws SQLException {
+        String sql = "SELECT * FROM internal_maintenance WHERE car_id=? ORDER BY repair_date DESC";
+        List<InternalMaintenance> list = new ArrayList<>();
+        try (Connection c = DBConnection.getConnection();
+             PreparedStatement ps = c.prepareStatement(sql)) {
+            ps.setLong(1, carId);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) list.add(map(rs));
+            }
+        }
+        return list;
+    }
+
 }

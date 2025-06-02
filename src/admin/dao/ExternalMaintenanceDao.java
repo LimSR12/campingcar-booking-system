@@ -173,4 +173,20 @@ public class ExternalMaintenanceDao implements CrudDao<ExternalMaintenance> {
            }
        }
    }
+   
+   public List<ExternalMaintenance> findByCarId(long carId) throws SQLException {
+	    String sql = "SELECT * FROM external_maintenance WHERE car_id = ? ORDER BY repair_date";
+	    List<ExternalMaintenance> list = new ArrayList<>();
+
+	    try (Connection c = DBConnection.getConnection();
+	         PreparedStatement ps = c.prepareStatement(sql)) {
+
+	        ps.setLong(1, carId);
+	        try (ResultSet rs = ps.executeQuery()) {
+	            while (rs.next()) list.add(map(rs));
+	        }
+	    }
+	    return list;
+	}
+
 }
