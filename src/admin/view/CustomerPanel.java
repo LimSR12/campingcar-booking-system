@@ -166,4 +166,20 @@ public class CustomerPanel extends AbstractTableCRUDPanel<Customer> {
         }
         showView();
     }
+
+	@Override
+	protected void openUpdateByConditionDialog() {
+        Frame parentFrame = (Frame) SwingUtilities.getWindowAncestor(this);
+        CustomerDao custDao = (CustomerDao) super.dao;
+        CustomerUpdate dlg = new CustomerUpdate(parentFrame, custDao, this::refreshTable);
+        dlg.setVisible(true);
+	}
+
+	@Override
+	protected void openDeleteByConditionDialog() {
+        Frame parentFrame = (Frame) SwingUtilities.getWindowAncestor(this);
+        CustomerDao custDao = (CustomerDao) super.dao;
+        CustomerDelete dlg = new CustomerDelete(parentFrame, custDao, this::refreshTable);
+        dlg.setVisible(true);
+	}
 }
