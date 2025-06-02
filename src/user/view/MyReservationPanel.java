@@ -106,8 +106,10 @@ public class MyReservationPanel extends JPanel {
         }
 
         Long rentalId = (Long) tableModel.getValueAt(selectedRow, 0);
-        RentalDao rentalDao = new RentalDao();
-        List<CampingCarDto> carList = rentalDao.getAllCampingCars();
+        int rentalDays = Integer.parseInt(tableModel.getValueAt(selectedRow, 4).toString());
+
+        RentalDao dao = new RentalDao();
+        List<CampingCarDto> carList = dao.getAllCampingCars();
 
         if (carList.isEmpty()) {
             JOptionPane.showMessageDialog(this, "변경 가능한 캠핑카가 없습니다.");
@@ -119,7 +121,13 @@ public class MyReservationPanel extends JPanel {
 
         if (result == JOptionPane.OK_OPTION) {
             CampingCarDto selectedCar = (CampingCarDto) comboBox.getSelectedItem();
-            boolean success = rentalDao.updateCampingCar(rentalId, selectedCar.getId());
+            Long newCarId = selectedCar.getId();
+
+            // 요금 가져오기
+            int unitPrice = dao.getCampingCarPrice(newCarId);
+
+            // 캠핑카 변경 + 요금 업데이트
+            boolean success = dao.updateCampingCar(rentalId, newCarId, unitPrice, rentalDays);
 
             if (success) {
                 JOptionPane.showMessageDialog(this, "캠핑카가 성공적으로 변경되었습니다.");
@@ -129,6 +137,7 @@ public class MyReservationPanel extends JPanel {
             }
         }
     }
+
     
     // 예약 일정 변경하는 메서드
     private void changeRentalDates() {

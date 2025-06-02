@@ -140,22 +140,26 @@ public class RentalDao {
     }
 
     // 캠핑카 예약 내역 업데이트 하는 메서드
-    public boolean updateCampingCar(Long rentalId, Long newCarId) {
-        String sql = "UPDATE rental SET car_id = ? WHERE id = ?";
+    public boolean updateCampingCar(Long rentalId, Long newCarId, int unitPrice, int rentalDays) {
+        String sql = "UPDATE rental SET car_id = ?, rental_fee = ? WHERE id = ?";
+
+        double newFee = unitPrice * rentalDays;
 
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setLong(1, newCarId);
-            pstmt.setLong(2, rentalId);
-            int result = pstmt.executeUpdate();
-            return result > 0;
+            pstmt.setDouble(2, newFee);
+            pstmt.setLong(3, rentalId);
+
+            return pstmt.executeUpdate() > 0;
 
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
         }
     }
+
     
     // 캠핑카 id, name 받아오는 DTO
     public class CampingCarDto {
