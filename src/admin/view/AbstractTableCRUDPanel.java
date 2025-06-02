@@ -31,8 +31,12 @@ public abstract class AbstractTableCRUDPanel<T> extends JPanel {
         JToolBar tb = new JToolBar();
         JButton bView = new JButton("조회");
         JButton bNew  = new JButton("입력");
+        JButton bUpdate = new JButton("수정");
+        JButton bDelete = new JButton("삭제");
         tb.add(bView);
         tb.add(bNew);
+        tb.add(bUpdate);
+        tb.add(bDelete);
         add(tb, BorderLayout.NORTH);
 
         // 카드: 목록 / 폼
@@ -43,13 +47,15 @@ public abstract class AbstractTableCRUDPanel<T> extends JPanel {
         // 리스너
         bView.addActionListener(e -> showView());
         bNew .addActionListener(e -> clearAndShowForm());
+        bUpdate.addActionListener(e -> openUpdateByConditionDialog());
+        bDelete.addActionListener(e -> openDeleteByConditionDialog());
 
         // 최초 표시
         showView();
     }
 
     // ─── 목록 카드 ───
-    private JScrollPane createListPanel() {
+    protected JScrollPane createListPanel() {
         table = new JTable();
         return new JScrollPane(table);
     }
@@ -89,4 +95,10 @@ public abstract class AbstractTableCRUDPanel<T> extends JPanel {
 
     // 폼 데이터 읽어 저장
     protected abstract void saveForm();
+    
+    // 조건식 기반 수정 다이얼로그 열기
+    protected abstract void openUpdateByConditionDialog();
+
+    // 조건식 기반 삭제 다이얼로그 열기
+    protected abstract void openDeleteByConditionDialog();
 }
