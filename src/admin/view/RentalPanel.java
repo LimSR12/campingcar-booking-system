@@ -176,9 +176,10 @@ public class RentalPanel extends AbstractTableCRUDPanel<Rental> {
             DefaultComboBoxModel<Customer> custModel = new DefaultComboBoxModel<>();
             for (Customer c : customers) {
                 // 예: “관리자” 같은 특별한 고객을 제외하려면 여기서 필터링 가능
-                if (!"관리자".equals(c.getName())) {
-                    custModel.addElement(c);
-                }
+//                if (!"관리자".equals(c.getName())) {
+//                    custModel.addElement(c);
+//                }
+            	custModel.addElement(c);            	
             }
             cbCustomer.setModel(custModel);
         } catch (SQLException ex) {

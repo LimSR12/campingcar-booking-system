@@ -167,7 +167,7 @@ public class ExternalMaintenancePanel extends AbstractTableCRUDPanel<ExternalMai
             DefaultComboBoxModel<Customer> custModel = new DefaultComboBoxModel<>();
             for (Customer c : customers) {
             	// 관리자는 제외
-            	if("관리자".equals(c.getName())) continue;
+//            	if("관리자".equals(c.getName())) continue;
             	custModel.addElement(c);
             }
             cbCustomer.setModel(custModel);
