@@ -170,7 +170,7 @@ public class CampingCarUpdate extends JDialog {
         // “조건식” 패널 (콤보박스 없이 단순 텍스트필드)
         // ───────────────────────────────────────────────────────
         JPanel condPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 6, 6));
-        condPanel.setBorder(BorderFactory.createTitledBorder("조건식 (예: 가격 >= 5000 AND 정원 < 4)"));
+        condPanel.setBorder(BorderFactory.createTitledBorder("조건식 (예: rental_price >= 5000 AND capacity < 4)"));
         condPanel.add(tfCondition, FlowLayout.LEFT);
 
         content.add(condPanel);
