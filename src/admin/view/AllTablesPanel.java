@@ -28,7 +28,7 @@ public class AllTablesPanel extends JPanel {
 		// 콤보박스에 테이블 목록 로드
 		try {
 			Connection conn = DriverManager.getConnection(
-	                "jdbc:mysql://localhost:3306/camping", "root", "1234"
+	                "jdbc:mysql://localhost:3306/DBTEST", "root", "1234"
 	            );
 			
 			ResultSet rs = conn.getMetaData().getTables(conn.getCatalog(), null, "%", new String[] {"TABLE"});
