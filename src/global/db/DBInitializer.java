@@ -13,7 +13,7 @@ public class DBInitializer {
 		
 		Connection conn = DBConnection.getConnection();
 		Statement stmt = conn.createStatement();
-		Path sqlPath = Path.of("ini.sql");
+		Path sqlPath = Path.of("202501-19010801-ini.sql");
 		System.out.println("run() 진입");
         try {
             // DB 연결
