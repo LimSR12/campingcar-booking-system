@@ -3,26 +3,26 @@ SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
 
 -- -----------------------------------------------------
--- Schema camping
+-- Schema DBTEST
 -- -----------------------------------------------------
-DROP SCHEMA IF EXISTS `camping`;
-CREATE SCHEMA IF NOT EXISTS `camping` DEFAULT CHARACTER SET utf8 ;
-USE `camping` ;
+DROP SCHEMA IF EXISTS `DBTEST`;
+CREATE SCHEMA IF NOT EXISTS `DBTEST` DEFAULT CHARACTER SET utf8 ;
+USE `DBTEST` ;
 
-DROP TABLE IF EXISTS `camping`.`company` ;
-DROP TABLE IF EXISTS `camping`.`camping_car` ;
-DROP TABLE IF EXISTS `camping`.`part_inventory` ;
-DROP TABLE IF EXISTS `camping`.`staff` ;
-DROP TABLE IF EXISTS `camping`.`internal_maintenance` ;
-DROP TABLE IF EXISTS `camping`.`customer` ;
-DROP TABLE IF EXISTS `camping`.`rental` ;
-DROP TABLE IF EXISTS `camping`.`external_center` ;
-DROP TABLE IF EXISTS `camping`.`external_maintenance` ;
+DROP TABLE IF EXISTS `DBTEST`.`company` ;
+DROP TABLE IF EXISTS `DBTEST`.`camping_car` ;
+DROP TABLE IF EXISTS `DBTEST`.`part_inventory` ;
+DROP TABLE IF EXISTS `DBTEST`.`staff` ;
+DROP TABLE IF EXISTS `DBTEST`.`internal_maintenance` ;
+DROP TABLE IF EXISTS `DBTEST`.`customer` ;
+DROP TABLE IF EXISTS `DBTEST`.`rental` ;
+DROP TABLE IF EXISTS `DBTEST`.`external_center` ;
+DROP TABLE IF EXISTS `DBTEST`.`external_maintenance` ;
 
 -- -----------------------------------------------------
--- Table `camping`.`company`
+-- Table `DBTEST`.`company`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `camping`.`company` (
+CREATE TABLE IF NOT EXISTS `DBTEST`.`company` (
   `id` BIGINT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(50) NOT NULL,
   `address` VARCHAR(200) NOT NULL,
@@ -33,9 +33,9 @@ CREATE TABLE IF NOT EXISTS `camping`.`company` (
 ENGINE = InnoDB;
 
 -- -----------------------------------------------------
--- Table `camping`.`camping_car`
+-- Table `DBTEST`.`camping_car`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `camping`.`camping_car` (
+CREATE TABLE IF NOT EXISTS `DBTEST`.`camping_car` (
   `id` BIGINT NOT NULL AUTO_INCREMENT,
   `company_id` BIGINT NOT NULL,
   `name` VARCHAR(50) NOT NULL,
@@ -50,15 +50,15 @@ CREATE TABLE IF NOT EXISTS `camping`.`camping_car` (
   INDEX `fk_company_idx` (`company_id` ASC) VISIBLE,
   CONSTRAINT `fk_compingcar_company_id`
     FOREIGN KEY (`company_id`)
-    REFERENCES `camping`.`company` (`id`)
+    REFERENCES `DBTEST`.`company` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 -- -----------------------------------------------------
--- Table `camping`.`part_inventory`
+-- Table `DBTEST`.`part_inventory`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `camping`.`part_inventory` (
+CREATE TABLE IF NOT EXISTS `DBTEST`.`part_inventory` (
   `id` BIGINT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(50) NOT NULL,
   `price` DECIMAL(10,2) NOT NULL COMMENT 'Check (part_price >= 0)',
@@ -69,9 +69,9 @@ CREATE TABLE IF NOT EXISTS `camping`.`part_inventory` (
 ENGINE = InnoDB;
 
 -- -----------------------------------------------------
--- Table `camping`.`staff`
+-- Table `DBTEST`.`staff`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `camping`.`staff` (
+CREATE TABLE IF NOT EXISTS `DBTEST`.`staff` (
   `id` BIGINT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(50) NOT NULL,
   `phone` VARCHAR(20) NOT NULL,
@@ -84,9 +84,9 @@ CREATE TABLE IF NOT EXISTS `camping`.`staff` (
 ENGINE = InnoDB;
 
 -- -----------------------------------------------------
--- Table `camping`.`internal_maintenance`
+-- Table `DBTEST`.`internal_maintenance`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `camping`.`internal_maintenance` (
+CREATE TABLE IF NOT EXISTS `DBTEST`.`internal_maintenance` (
   `id` BIGINT NOT NULL AUTO_INCREMENT,
   `car_id` BIGINT NOT NULL,
   `part_id` BIGINT NOT NULL,
@@ -100,25 +100,25 @@ CREATE TABLE IF NOT EXISTS `camping`.`internal_maintenance` (
   INDEX `fk_Repair_Records_TB_Employee_TB1_idx` (`staff_id` ASC) VISIBLE,
   CONSTRAINT `fk_intmaint_car_id`
     FOREIGN KEY (`car_id`)
-    REFERENCES `camping`.`camping_car` (`id`)
+    REFERENCES `DBTEST`.`camping_car` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_intmaint_part_id`
     FOREIGN KEY (`part_id`)
-    REFERENCES `camping`.`part_inventory` (`id`)
+    REFERENCES `DBTEST`.`part_inventory` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_intmaint_staff_id`
     FOREIGN KEY (`staff_id`)
-    REFERENCES `camping`.`staff` (`id`)
+    REFERENCES `DBTEST`.`staff` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 -- -----------------------------------------------------
--- Table `camping`.`customer`
+-- Table `DBTEST`.`customer`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `camping`.`customer` (
+CREATE TABLE IF NOT EXISTS `DBTEST`.`customer` (
   `id` BIGINT NOT NULL AUTO_INCREMENT,
   `username` VARCHAR(50) NOT NULL,
   `password` VARCHAR(100) NOT NULL,
@@ -138,7 +138,7 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 -- Table `camping`.`rental`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `camping`.`rental` (
+CREATE TABLE IF NOT EXISTS `DBTEST`.`rental` (
   `id` BIGINT NOT NULL AUTO_INCREMENT,
   `car_id` BIGINT NOT NULL,
   `customer_id` BIGINT NOT NULL,	
@@ -157,25 +157,25 @@ CREATE TABLE IF NOT EXISTS `camping`.`rental` (
   INDEX `fk_rental_license_no_idx` (`license_number` ASC) VISIBLE,
   CONSTRAINT `fk_rental_car_id`
     FOREIGN KEY (`car_id`)
-    REFERENCES `camping`.`camping_car` (`id`)
+    REFERENCES `DBTEST`.`camping_car` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_rental_company_id`
     FOREIGN KEY (`company_id`)
-    REFERENCES `camping`.`company` (`id`)
+    REFERENCES `DBTEST`.`company` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_rental_customer_id`
     FOREIGN KEY (`customer_id`)
-    REFERENCES `camping`.`customer` (`id`)
+    REFERENCES `DBTEST`.`customer` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 -- -----------------------------------------------------
--- Table `camping`.`external_center`
+-- Table `DBTEST`.`external_center`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `camping`.`external_center` (
+CREATE TABLE IF NOT EXISTS `DBTEST`.`external_center` (
   `id` BIGINT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(50) NOT NULL,
   `address` VARCHAR(200) NOT NULL,
@@ -186,9 +186,9 @@ CREATE TABLE IF NOT EXISTS `camping`.`external_center` (
 ENGINE = InnoDB;
 
 -- -----------------------------------------------------
--- Table `camping`.`external_maintenance`
+-- Table `DBTEST`.`external_maintenance`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `camping`.`external_maintenance` (
+CREATE TABLE IF NOT EXISTS `DBTEST`.`external_maintenance` (
   `id` BIGINT NOT NULL AUTO_INCREMENT,
   `car_id` BIGINT NOT NULL,
   `center_id` BIGINT NOT NULL,
@@ -206,22 +206,22 @@ CREATE TABLE IF NOT EXISTS `camping`.`external_maintenance` (
   INDEX `fk_company_idx` (`company_id` ASC) VISIBLE,
   CONSTRAINT `fk_extmaint_company_id`
     FOREIGN KEY (`company_id`)
-    REFERENCES `camping`.`company` (`id`)
+    REFERENCES `DBTEST`.`company` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_extmaint_car_id`
     FOREIGN KEY (`car_id`)
-    REFERENCES `camping`.`camping_car` (`id`)
+    REFERENCES `DBTEST`.`camping_car` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_extmaint_customer_id`
     FOREIGN KEY (`customer_id`)
-    REFERENCES `camping`.`customer` (`id`)
+    REFERENCES `DBTEST`.`customer` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_extmaint_center_id`
     FOREIGN KEY (`center_id`)
-    REFERENCES `camping`.`external_center` (`id`)
+    REFERENCES `DBTEST`.`external_center` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -348,15 +348,15 @@ INSERT INTO external_maintenance (car_id, center_id, license_number, customer_id
 (12, 12, 'DL2025-1012', 12, 12, '도어 잠금장치 고장 수리', '2025-03-23 09:40:00', 85000.00, '2025-04-02', NULL);
 
 INSERT INTO rental (car_id, license_number, customer_id, company_id, start_date, return_date, rental_days, rental_fee, fee_due_date, extra_details, extra_fee) VALUES
-(1, 'DL2025-1001', 1, 1, '2025-03-01 10:00:00', '2025-03-05 10:00:00', 4, 400000.00, '2025-03-05 12:00:00', NULL, NULL),
-(2, 'DL2025-1002', 2, 2, '2025-03-03 09:00:00', '2025-03-06 09:00:00', 3, 300000.00, '2025-03-06 12:00:00', '추가 보험료', 20000.00),
-(3, 'DL2025-1003', 3, 3, '2025-03-05 15:00:00', '2025-03-09 15:00:00', 4, 360000.00, '2025-03-09 18:00:00', NULL, NULL),
-(4, 'DL2025-1004', 4, 4, '2025-03-07 12:00:00', '2025-03-09 12:00:00', 2, 220000.00, '2025-03-09 15:00:00', NULL, NULL),
+(1, 'DL2025-1001', 1, 1, '2025-03-01 10:00:00', '2025-03-05 10:00:00', 5, 400000.00, '2025-03-05 12:00:00', NULL, NULL),
+(2, 'DL2025-1002', 2, 2, '2025-03-03 09:00:00', '2025-03-06 09:00:00', 4, 300000.00, '2025-03-06 12:00:00', '추가 보험료', 20000.00),
+(3, 'DL2025-1003', 3, 3, '2025-03-05 15:00:00', '2025-03-09 15:00:00', 5, 360000.00, '2025-03-09 18:00:00', NULL, NULL),
+(4, 'DL2025-1004', 4, 4, '2025-03-07 12:00:00', '2025-03-09 12:00:00', 3, 220000.00, '2025-03-09 15:00:00', NULL, NULL),
 (5, 'DL2025-1005', 5, 5, '2025-03-09 11:00:00', '2025-03-14 11:00:00', 5, 500000.00, '2025-03-14 12:00:00', '청소비 포함', 10000.00),
-(6, 'DL2025-1006', 6, 6, '2025-03-11 08:00:00', '2025-03-13 08:00:00', 2, 200000.00, '2025-03-13 10:00:00', NULL, NULL),
-(7, 'DL2025-1007', 7, 7, '2025-03-13 10:00:00', '2025-03-16 10:00:00', 3, 330000.00, '2025-03-16 11:00:00', NULL, NULL),
-(8, 'DL2025-1008', 8, 8, '2025-03-15 13:00:00', '2025-03-18 13:00:00', 3, 360000.00, '2025-03-18 14:00:00', NULL, NULL),
-(9, 'DL2025-1009', 9, 9, '2025-03-17 09:30:00', '2025-03-20 09:30:00', 3, 300000.00, '2025-03-20 11:00:00', NULL, NULL),
-(10, 'DL2025-1010', 10, 10, '2025-03-19 17:00:00', '2025-03-22 17:00:00', 3, 270000.00, '2025-03-22 20:00:00', NULL, NULL),
-(11, 'DL2025-1011', 11, 11, '2025-03-21 14:00:00', '2025-03-24 14:00:00', 3, 330000.00, '2025-03-24 16:00:00', '아이용 카시트 포함', 15000.00),
-(12, 'DL2025-1012', 12, 12, '2025-03-23 10:00:00', '2025-03-25 10:00:00', 2, 220000.00, '2025-03-25 12:00:00', NULL, NULL);
+(6, 'DL2025-1006', 6, 6, '2025-03-11 08:00:00', '2025-03-13 08:00:00', 3, 200000.00, '2025-03-13 10:00:00', NULL, NULL),
+(7, 'DL2025-1007', 7, 7, '2025-03-13 10:00:00', '2025-03-16 10:00:00', 4, 330000.00, '2025-03-16 11:00:00', NULL, NULL),
+(8, 'DL2025-1008', 8, 8, '2025-03-15 13:00:00', '2025-03-18 13:00:00', 4, 360000.00, '2025-03-18 14:00:00', NULL, NULL),
+(9, 'DL2025-1009', 9, 9, '2025-03-17 09:30:00', '2025-03-20 09:30:00', 4, 300000.00, '2025-03-20 11:00:00', NULL, NULL),
+(10, 'DL2025-1010', 10, 10, '2025-03-19 17:00:00', '2025-03-22 17:00:00', 4, 270000.00, '2025-03-22 20:00:00', NULL, NULL),
+(11, 'DL2025-1011', 11, 11, '2025-03-21 14:00:00', '2025-03-24 14:00:00', 4, 330000.00, '2025-03-24 16:00:00', '아이용 카시트 포함', 15000.00),
+(12, 'DL2025-1012', 12, 12, '2025-03-23 10:00:00', '2025-03-25 10:00:00', 3, 220000.00, '2025-03-25 12:00:00', NULL, NULL);
