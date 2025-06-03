@@ -11,16 +11,12 @@ import java.util.List;
 public class DBInitializer {
 	public static void run() throws Exception {
 		
-		Connection conn = null;
-		Path sqlPath = Path.of("202501-19010801-ini.sql");
-		
+		Connection conn = DBConnection.getConnection();
+		Statement stmt = conn.createStatement();
+		Path sqlPath = Path.of("ini.sql");
+		System.out.println("run() 진입");
         try {
             // DB 연결
-            conn = DriverManager.getConnection(
-                "jdbc:mysql://localhost:3306", "root", "1234"
-            );
-
-            Statement stmt = conn.createStatement();
             Reader rd = Files.newBufferedReader(sqlPath);
             BufferedReader br = new BufferedReader(rd);
             
@@ -52,9 +48,18 @@ public class DBInitializer {
             
             conn.close();
             
+        } catch (SQLException e) {
+            System.out.println("🔴 [SQL 오류 발생]");
+            System.out.println("▶ SQLState : " + e.getSQLState());
+            System.out.println("▶ ErrorCode : " + e.getErrorCode());
+            System.out.println("▶ Message   : " + e.getMessage());
+            e.printStackTrace();
         } catch (Exception e) {
+            System.out.println("🟠 [일반 예외 발생]");
+            System.out.println("▶ 예외 메시지 : " + e.getMessage());
             e.printStackTrace();
         }
+
 	}
 	
 	public static List<String> getTableNames() throws SQLException {
