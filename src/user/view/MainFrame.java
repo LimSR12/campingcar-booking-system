@@ -10,11 +10,6 @@ public class MainFrame extends JFrame {
     private JPanel rightPanel = new JPanel(cardLayout);
     private MyReservationPanel myReservationPanel = new MyReservationPanel();
     
-    public static void main(String[] args) {
-    	// 테스트용 main
-        new MainFrame();
-    }
-
     public MainFrame() {
         setTitle("캠핑카 예약 시스템");
         setSize(1024, 768);
